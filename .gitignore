@@ -1,3 +1,5 @@
 jobs
 tmp
 uploads
+__pycache__
+*.pyc
