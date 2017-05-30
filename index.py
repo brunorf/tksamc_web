@@ -1,4 +1,6 @@
-from flask import Flask, render_template, Response, jsonify, request
+#!/usr/bin/python3
+
+from flask import Flask, render_template, Response, jsonify, request, send_from_directory
 from werkzeug.utils import secure_filename
 import os
 import hashlib
@@ -14,9 +16,19 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
+
+# os.chdir('/var/www/html/pdg/pdg')
+os.chdir('/home/bruno/Projetos/pdg/pdg')
+
+
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+@app.route('/jobs/<path:job_dir>/<path:filename>')
+def custom_static(job_dir,filename):
+    return send_from_directory('jobs/' + job_dir, filename)
 
 @app.route('/')
 def index():
@@ -26,8 +38,8 @@ def index():
 def submit():
     if request.method == 'POST':
         # check if the post request has the file part
-        if 'input_file' not in request.files:
-            return redirect(request.url)
+        # if 'input_file' not in request.files:
+            # return redirect(request.url)
 
         job_dir = 'jobs/{}'.format(datetime.today().strftime('%Y-%m-%d_%H:%M:%S:%f'))
         os.makedirs(job_dir)
@@ -37,17 +49,20 @@ def submit():
         file = request.files.get('input_file')
         filename = secure_filename(file.filename)
         file.save(os.path.join(job_dir, filename))
+        temperature = request.form.get('temperature')
+        ph = request.form.get('pH')
 
         cwd = os.getcwd()
         os.chdir(job_dir)
         print(os.getcwd())
-        subprocess.call('python2 ./pulo_do_gato.py -T 20 -ph 3.4 -s MC -f 5vab.pdb > output.txt', shell=True)
 
-        output_file = open('output.txt', 'r')
+        subprocess.call('python2 ./pulo_do_gato.py -T {} -ph {} -s MC -f {} > output.txt'.format(temperature, ph, filename), shell=True)
+
+        output_file = open('output.txt', 'r', encoding='utf-8')
         image_filename = os
         return_data = jsonify(
             job_dir=job_dir,
-            stdout=output_file.read(),
+            stdout='<br/>'.join(output_file.read().split('\n')),
             image=glob.glob('*.jpg')[0],
             output=glob.glob('Output*.dat')[0]
         )
@@ -58,3 +73,7 @@ def submit():
         return return_data
     else:
         return ''
+
+
+if __name__ == '__main__':
+      app.run(host='0.0.0.0')
