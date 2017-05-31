@@ -3,3 +3,4 @@ tmp
 uploads
 __pycache__
 *.pyc
+smtpconfig.py

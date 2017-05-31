@@ -7,6 +7,8 @@ import hashlib
 from datetime import datetime
 import subprocess
 import glob
+import smtplib
+import smtpconfig
 
 app = Flask(__name__)
 UPLOAD_FOLDER = 'uploads'
@@ -25,6 +27,24 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+
+def send_email(to, job_id):
+    msg = "\r\n".join([
+        "From: " + smtpconfig.FROM,
+        "To: " + to,
+        "Subject: " + smtpconfig.SUBJECT + str(job_id),
+        "",
+        "Why, oh why"
+        ])
+    try:
+        smtp = smtplib.SMTP(smtpconfig.SERVER, smtpconfig.SERVER_PORT)
+        smtp.ehlo()
+        smtp.starttls()
+        smtp.login(smtpconfig.LOGIN, smtpconfig.PASSWORD)
+        smtp.sendmail(smtpconfig.FROM, to, msg)
+        smtp.close()
+    except:
+        print("Error")
 
 @app.route('/jobs/<path:job_dir>/<path:filename>')
 def custom_static(job_dir,filename):
