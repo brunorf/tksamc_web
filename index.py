@@ -96,6 +96,9 @@ def check_job(job_id):
     job_dir = os.path.join('jobs', job_id )
     finished = False
 
+    if not os.path.isdir(job_dir):
+        abort(404)
+
     job_data = None
     if os.path.isfile( os.path.join(job_dir, 'finished') ):
         finished = True
