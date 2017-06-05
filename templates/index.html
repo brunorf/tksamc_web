@@ -1,118 +1,30 @@
-<!doctype html>
-<html lang="pt-BR">
-
-<head>
-    <meta charset="utf-8">
-
-    <title>TKSAMC</title>
-    <meta name="description" content="The HTML5 Herald">
-    <meta name="author" content="SitePoint">
-    <!-- Bootstrap core CSS -->
-    <link href="static/bootstrap-4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet">
-    <style type="text/css">
-    .modal-dialog{
-      position: relative;
-      display: table; //This is important
-      overflow-y: auto;
-      overflow-x: auto;
-      width: auto;
-      min-width: 300px;
-    }
-    </style>
-</head>
-
-<body>
-    <nav class="navbar navbar-toggleable-md navbar-inverse fixed-top bg-inverse">
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-        <!-- <a class="navbar-brand" href="#">Navbar</a> -->
-
-        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Expected Results</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Theory</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Citing Us</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-
-
-    <div class="modal" id="output" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">Job Results</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron">
-        <div class="container">
-            <h1 class="display-3">TKSAMC</h1>
-            <p>Tanford-Kirkwood Surface Accessibility - Monte Carlo</p>
-        </div>
-    </div>
-
-    <div class="container">
-        <!-- Example row of columns -->
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        Submit a new job
-                    </div>
-                    <div class="card-block">
-                        <form action="{{ url_for('submit') }}" id="submit_job_form" enctype="multipart/form-data" method="post">
-                          <div class="form-group">
-                            <label for="input_file">PDB file:</label>
-                            <input name="input_file" id="input_file" type="file" class="form-control-file">
-                          </div>
-                          <div class="form-group">
-                            <label for="pH">pH:</label>
-                            <input name="pH" id="ph" type="number" class="form-control" step="0.1" min="0" max="14" value="7.0">
-                          </div>
-                          <div class="form-group">
-                            <label for="temperature">Temperature (K):</label>
-                            <input name="temperature" id="temperature" type="number" class="form-control" step="0.1" min="0" value="300">
-                          </div>
-                          <button type="submit" class="btn btn-primary">Submit</button>
-                        </form>
-
-                    </div>
-                </div>
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                Submit a new job
             </div>
+            <div class="card-block">
+                <form action="{{ url_for('submit') }}" id="submit_job_form" enctype="multipart/form-data" method="post">
+                  <div class="form-group">
+                    <label for="input_file">PDB file:</label>
+                    <input name="input_file" id="input_file" type="file" class="form-control-file">
+                  </div>
+                  <div class="form-group">
+                    <label for="pH">pH:</label>
+                    <input name="pH" id="ph" type="number" class="form-control" step="0.1" min="0" max="14" value="7.0">
+                  </div>
+                  <div class="form-group">
+                    <label for="temperature">Temperature (K):</label>
+                    <input name="temperature" id="temperature" type="number" class="form-control" step="0.1" min="0" value="300">
+                  </div>
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
 
-            <hr>
-
-            <footer>
-
-            </footer>
+            </div>
         </div>
-        <!-- /container -->
-        <script src="static/js/jquery-3.2.1.min.js"></script>
-        <script src="static/bootstrap-4.0.0-alpha.6/js/bootstrap.min.js"></script>
-        <!-- <script src="static/js/script.js"></script> -->
-</body>
-
-</html>
+    </div>
+</div>
+{% endblock %}
