@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from flask import Flask, render_template, Response, jsonify, request, send_from_directory, redirect, url_for
+from flask import Flask, render_template, Response, jsonify, request, send_from_directory, redirect, url_for, abort
 from werkzeug.utils import secure_filename
 import os
 import hashlib
@@ -46,9 +46,13 @@ def send_email(to, job_id):
     except:
         print("Error")
 
-@app.route('/jobs/<path:job_dir>/<path:filename>')
-def custom_static(job_dir,filename):
-    return send_from_directory('jobs/' + job_dir, filename)
+@app.route('/jobs/<job_id>/<filename>')
+def get_job_files(job_id,filename):
+    # check if requested file is not part of the system
+    if filename not in ['aux', 'pulo_do_gato.py', 'radii.txt', 'README', 'src', 'surfrace5_0_linux_64bit']:
+        return send_from_directory('jobs/' + job_id, filename)
+    else:
+        return abort(404)
 
 @app.route('/')
 def index():
@@ -58,12 +62,6 @@ def index():
 def submit():
     import hashlib
     import random
-    # check if the post request has the file part
-    # if 'input_file' not in request.files:
-        # return redirect(request.url)
-
-    # job_dir = 'jobs/{}'.format(datetime.today().strftime('%Y-%m-%d_%H:%M:%S:%f'))
-
 
     file = request.files.get('input_file')
     filename = secure_filename(file.filename)
@@ -71,7 +69,7 @@ def submit():
     ph = request.form.get('pH')
 
 
-    job_id = hashlib.sha512(bytearray(str(datetime.today()) + filename + temperature + ph + str(random.random()),'ascii')).hexdigest()
+    job_id = hashlib.sha1(bytearray(str(datetime.today()) + filename + temperature + ph + str(random.random()),'ascii')).hexdigest()
     job_dir = os.path.join('jobs', job_id )
     os.makedirs(job_dir)
     [ os.symlink(os.path.join('../../pulo_do_gato_bin', f), os.path.join(job_dir,f)) for f in os.listdir('pulo_do_gato_bin') ]
@@ -90,11 +88,19 @@ def submit():
 @app.route('/check_job/<job_id>')
 def check_job(job_id):
     job_dir = os.path.join('jobs', job_id )
-    if os.path.isfile( os.path.join(job_dir, 'finished') ):
-        return 'terminou'
-    else:
-        return 'ainda não'
+    finished = False
 
+    if os.path.isfile( os.path.join(job_dir, 'finished') ):
+        finished = True
+    stdout = ''
+    with open(os.path.join(job_dir,'output.txt') ) as stdout_file:
+        stdout='<br/>'.join(stdout_file.read().split('\n')),
+
+
+    return render_template('check_job.html', finished=finished, job_id=job_id,
+                    output_file=os.path.basename(glob.glob(os.path.join(job_dir, 'Output*.dat'))[0]),
+                    image=os.path.basename(glob.glob(os.path.join(job_dir,'*.jpg') )[0]),
+                    stdout=stdout)
 
 if __name__ == '__main__':
       app.run(host='0.0.0.0')

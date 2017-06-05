@@ -10,6 +10,10 @@
     <!-- Bootstrap core CSS -->
     <link href="{{ url_for('static', filename='bootstrap-4.0.0-alpha.6/css/bootstrap.min.css') }}" rel="stylesheet">
     <style type="text/css">
+    .graph {
+      width:100%;
+      max-width: 1000px;
+    }
     .modal-dialog{
       position: relative;
       display: table; //This is important
@@ -19,6 +23,8 @@
       min-width: 300px;
     }
     </style>
+    {% block html_header %}
+    {% endblock %}
 </head>
 
 <body>

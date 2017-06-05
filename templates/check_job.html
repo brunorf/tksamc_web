@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block html_header %}
+{% if not finished %}
+  <meta http-equiv="refresh" content="10">
+{% endif %}
+{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                Job results
+
+            <div class="card-block">
+            </div>
+            <a data-toggle='collapse' href='#collapseExample' aria-expanded='false' aria-controls='collapseExample'>
+              Show script output
+            </a>
+            <div class='collapse' id='collapseExample'>
+              <div class='card card-block'>
+              {{ stdout|safe }}
+              </div>
+            </div>
+
+              <br/><br/>
+              Output file: <a href="{{ url_for('get_job_files', job_id=job_id, filename=output_file) }}" target="_blank">click here</a>
+              <br/><br/>
+              Graph:<br/>
+              <img class="graph" src="{{ url_for('get_job_files', job_id=job_id, filename=image) }}">
+
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
