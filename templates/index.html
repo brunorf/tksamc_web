@@ -83,7 +83,7 @@
                         Submit a new job
                     </div>
                     <div class="card-block">
-                        <form action="{{ url_for('submit') }}" id="submit_job_form" enctype="multipart/form-data" onsubmit="return false;" method="post">
+                        <form action="{{ url_for('submit') }}" id="submit_job_form" enctype="multipart/form-data" method="post">
                           <div class="form-group">
                             <label for="input_file">PDB file:</label>
                             <input name="input_file" id="input_file" type="file" class="form-control-file">
@@ -112,7 +112,7 @@
         <!-- /container -->
         <script src="static/js/jquery-3.2.1.min.js"></script>
         <script src="static/bootstrap-4.0.0-alpha.6/js/bootstrap.min.js"></script>
-        <script src="static/js/script.js"></script>
+        <!-- <script src="static/js/script.js"></script> -->
 </body>
 
 </html>

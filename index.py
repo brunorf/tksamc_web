@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from flask import Flask, render_template, Response, jsonify, request, send_from_directory
+from flask import Flask, render_template, Response, jsonify, request, send_from_directory, redirect, url_for
 from werkzeug.utils import secure_filename
 import os
 import hashlib
@@ -54,45 +54,46 @@ def custom_static(job_dir,filename):
 def index():
     return render_template('index.html')
 
-@app.route('/submit', methods=['GET','POST', 'PUT'])
+@app.route('/submit', methods=['POST'])
 def submit():
-    if request.method == 'POST':
-        # check if the post request has the file part
-        # if 'input_file' not in request.files:
-            # return redirect(request.url)
+    import hashlib
+    import random
+    # check if the post request has the file part
+    # if 'input_file' not in request.files:
+        # return redirect(request.url)
 
-        job_dir = 'jobs/{}'.format(datetime.today().strftime('%Y-%m-%d_%H:%M:%S:%f'))
-        os.makedirs(job_dir)
-        [ os.symlink(os.path.join('../../pulo_do_gato_bin', f), os.path.join(job_dir,f)) for f in os.listdir('pulo_do_gato_bin') ]
+    # job_dir = 'jobs/{}'.format(datetime.today().strftime('%Y-%m-%d_%H:%M:%S:%f'))
 
 
-        file = request.files.get('input_file')
-        filename = secure_filename(file.filename)
-        file.save(os.path.join(job_dir, filename))
-        temperature = request.form.get('temperature')
-        ph = request.form.get('pH')
+    file = request.files.get('input_file')
+    filename = secure_filename(file.filename)
+    temperature = request.form.get('temperature')
+    ph = request.form.get('pH')
 
-        cwd = os.getcwd()
-        os.chdir(job_dir)
-        print(os.getcwd())
 
-        subprocess.call('python2 ./pulo_do_gato.py -T {} -ph {} -s MC -f {} > output.txt'.format(temperature, ph, filename), shell=True)
+    job_id = hashlib.sha512(bytearray(str(datetime.today()) + filename + temperature + ph + str(random.random()),'ascii')).hexdigest()
+    job_dir = os.path.join('jobs', job_id )
+    os.makedirs(job_dir)
+    [ os.symlink(os.path.join('../../pulo_do_gato_bin', f), os.path.join(job_dir,f)) for f in os.listdir('pulo_do_gato_bin') ]
+    file.save(os.path.join(job_dir, filename))
 
-        output_file = open('output.txt', 'r', encoding='utf-8')
-        image_filename = os
-        return_data = jsonify(
-            job_dir=job_dir,
-            stdout='<br/>'.join(output_file.read().split('\n')),
-            image=glob.glob('*.jpg')[0],
-            output=glob.glob('Output*.dat')[0]
-        )
-        output_file.close()
+    cwd = os.getcwd()
+    os.chdir(job_dir)
+    print(os.getcwd())
 
-        os.chdir(cwd)
+    subprocess.Popen('python2 ./pulo_do_gato.py -T {} -ph {} -s MC -f {} > output.txt; touch finished'.format(temperature, ph, filename), shell=True)
 
-        return return_data
+    os.chdir(cwd)
+
+    return redirect(url_for('check_job', job_id=job_id))
+
+@app.route('/check_job/<job_id>')
+def check_job(job_id):
+    job_dir = os.path.join('jobs', job_id )
+    if os.path.isfile( os.path.join(job_dir, 'finished') ):
+        return 'terminou'
     else:
-        return ''
+        return 'ainda não'
 
 
 if __name__ == '__main__':
