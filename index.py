@@ -96,17 +96,20 @@ def check_job(job_id):
     job_dir = os.path.join('jobs', job_id )
     finished = False
 
+    job_data = None
     if os.path.isfile( os.path.join(job_dir, 'finished') ):
         finished = True
-    stdout = ''
-    with open(os.path.join(job_dir,'output.txt') ) as stdout_file:
-        stdout='<br/>'.join(stdout_file.read().split('\n')),
+        stdout = ''
+        with open(os.path.join(job_dir,'output.txt') ) as stdout_file:
+            stdout='<br/>'.join(stdout_file.read().split('\n')),
+        job_data = dict(
+            job_id=job_id,
+            output_file=os.path.basename(glob.glob(os.path.join(job_dir, 'Output*.dat'))[0]),
+            image=os.path.basename(glob.glob(os.path.join(job_dir,'*.jpg') )[0]),
+            stdout=stdout
+        )
 
-
-    return render_template('check_job.html', finished=finished, job_id=job_id,
-                    output_file=os.path.basename(glob.glob(os.path.join(job_dir, 'Output*.dat'))[0]),
-                    image=os.path.basename(glob.glob(os.path.join(job_dir,'*.jpg') )[0]),
-                    stdout=stdout)
+    return render_template('check_job.html', finished=finished, job_data=job_data)
 
 if __name__ == '__main__':
       app.run(host='0.0.0.0')
