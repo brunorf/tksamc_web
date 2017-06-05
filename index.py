@@ -18,6 +18,7 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
+SERVER_NAME='http://localhost:5000'
 
 # os.chdir('/var/www/html/pdg/pdg')
 os.chdir('/home/bruno/Projetos/pdg/pdg')
@@ -34,7 +35,8 @@ def send_email(to, job_id):
         "To: " + to,
         "Subject: " + smtpconfig.SUBJECT + str(job_id),
         "",
-        "Why, oh why"
+        "Hello, you can check your job results on the link bellow:\n" +
+        url_for('check_job', job_id=job_id, _external=True)
         ])
     try:
         smtp = smtplib.SMTP(smtpconfig.SERVER, smtpconfig.SERVER_PORT)
@@ -67,6 +69,7 @@ def submit():
     filename = secure_filename(file.filename)
     temperature = request.form.get('temperature')
     ph = request.form.get('pH')
+    email = request.form.get('email')
 
 
     job_id = hashlib.sha1(bytearray(str(datetime.today()) + filename + temperature + ph + str(random.random()),'ascii')).hexdigest()
@@ -82,6 +85,9 @@ def submit():
     subprocess.Popen('python2 ./pulo_do_gato.py -T {} -ph {} -s MC -f {} > output.txt; touch finished'.format(temperature, ph, filename), shell=True)
 
     os.chdir(cwd)
+
+    if email != '':
+        send_email(email, job_id)
 
     return redirect(url_for('check_job', job_id=job_id))
 
