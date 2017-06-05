@@ -103,7 +103,7 @@ def check_job(job_id):
     if os.path.isfile( os.path.join(job_dir, 'finished') ):
         finished = True
         stdout = ''
-        with open(os.path.join(job_dir,'output.txt') ) as stdout_file:
+        with open(os.path.join(job_dir,'output.txt'), encoding='utf-8') as stdout_file:
             stdout='<br/>'.join(stdout_file.read().split('\n')),
         job_data = dict(
             job_id=job_id,
