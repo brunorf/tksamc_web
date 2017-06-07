@@ -9,6 +9,8 @@ import subprocess
 import glob
 import smtplib
 import smtpconfig
+from database import db_session
+from models import Job
 
 app = Flask(__name__)
 UPLOAD_FOLDER = 'uploads'
@@ -48,11 +50,15 @@ def send_email(to, job_id):
     except:
         print("Error")
 
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    db_session.remove()
+
 @app.route('/jobs/<job_id>/<filename>')
 def get_job_files(job_id,filename):
     # check if requested file is not part of the system
     if filename not in ['aux', 'pulo_do_gato.py', 'radii.txt', 'README', 'src', 'surfrace5_0_linux_64bit']:
-        return send_from_directory('jobs/' + job_id, filename)
+        return send_from_directory('jobs/' + str(job_id), filename)
     else:
         return abort(404)
 
@@ -68,21 +74,24 @@ def submit():
     file = request.files.get('input_file')
     filename = secure_filename(file.filename)
     temperature = request.form.get('temperature')
-    ph = request.form.get('pH')
+    pH = request.form.get('pH')
     email = request.form.get('email')
 
+    job = Job(job_name='job_name', pH=pH, temperature=temperature, email=email)
 
-    job_id = hashlib.sha1(bytearray(str(datetime.today()) + filename + temperature + ph + str(random.random()),'ascii')).hexdigest()
-    job_dir = os.path.join('jobs', job_id )
+    db_session.add(job)
+    db_session.commit()
+
+    job_id = job.id
+    job_dir = os.path.join('jobs', str(job_id) )
     os.makedirs(job_dir)
     [ os.symlink(os.path.join('../../pulo_do_gato_bin', f), os.path.join(job_dir,f)) for f in os.listdir('pulo_do_gato_bin') ]
     file.save(os.path.join(job_dir, filename))
 
     cwd = os.getcwd()
     os.chdir(job_dir)
-    print(os.getcwd())
 
-    subprocess.Popen('python2 ./pulo_do_gato.py -T {} -ph {} -s MC -f {} > output.txt; touch finished'.format(temperature, ph, filename), shell=True)
+    subprocess.Popen('python2 ./pulo_do_gato.py -T {} -ph {} -s MC -f {} > output.txt; touch finished'.format(temperature, pH, filename), shell=True)
 
     os.chdir(cwd)
 
@@ -93,7 +102,7 @@ def submit():
 
 @app.route('/check_job/<job_id>')
 def check_job(job_id):
-    job_dir = os.path.join('jobs', job_id )
+    job_dir = os.path.join('jobs', str(job_id) )
     finished = False
 
     if not os.path.isdir(job_dir):
@@ -106,7 +115,7 @@ def check_job(job_id):
         with open(os.path.join(job_dir,'output.txt'), encoding='utf-8') as stdout_file:
             stdout='<br/>'.join(stdout_file.read().split('\n')),
         job_data = dict(
-            job_id=job_id,
+            job_id=str(job_id),
             output_file=os.path.basename(glob.glob(os.path.join(job_dir, 'Output*.dat'))[0]),
             image=os.path.basename(glob.glob(os.path.join(job_dir,'*.jpg') )[0]),
             stdout=stdout
