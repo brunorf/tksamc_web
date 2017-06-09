@@ -83,6 +83,8 @@ def submit():
     db_session.commit()
 
     job_id = job.id
+    print(job_id)
+    print(os.getcwd())
     job_dir = os.path.join('jobs', str(job_id) )
     os.makedirs(job_dir)
     [ os.symlink(os.path.join('../../pulo_do_gato_bin', f), os.path.join(job_dir,f)) for f in os.listdir('pulo_do_gato_bin') ]
@@ -99,6 +101,34 @@ def submit():
         send_email(email, job_id)
 
     return redirect(url_for('check_job', job_id=job_id))
+
+
+@app.route('/get_job_archive/<job_id>')
+def get_job_archive(job_id):
+    import shutil
+    import tempfile
+    import time
+    import helpers
+
+    with helpers.change_workingdir(os.path.join('jobs', str(job_id))):
+        job = Job.query.filter(Job.id==job_id).first()
+        if job != None:
+            if job.job_name and job.job_name != '':
+                archive_name = job.job_name
+            else:
+                archive_name = str(job.id)
+
+            # print(os.getcwd())
+            subprocess.call('find . -type l -delete', shell=True)
+            subprocess.call('find . -name "*.zip" -delete', shell=True)
+
+            tmp_zip_dir = tempfile.TemporaryDirectory()
+            filename = shutil.make_archive(os.path.join(tmp_zip_dir.name,archive_name),'zip')
+            shutil.move(os.path.join(tmp_zip_dir.name, filename), '.')
+            # return send_from_directory(os.path.join('jobs/', str(job_id)), filename)
+            return redirect(url_for('get_job_files', job_id=job_id, filename=os.path.basename(filename)))
+        return abort(404)
+
 
 @app.route('/check_job/<job_id>')
 def check_job(job_id):
