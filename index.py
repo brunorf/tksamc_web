@@ -92,7 +92,8 @@ def submit():
 
 
     with helpers.change_workingdir(job_dir):
-        subprocess.Popen('python2 ./pulo_do_gato.py -T {} -ph {} -s MC -f {} > output.txt; touch finished'.format(temperature, pH, filename), shell=True)
+        subprocess.Popen('gmx editconf -f {0} -c -resnr 1 -label A -o processed_{0}'.format(filename), shell=True)
+        subprocess.Popen('python2 ./pulo_do_gato.py -T {} -ph {} -s MC -f processed_{} > output.txt; touch finished'.format(temperature, pH, filename), shell=True)
 
     if email != '':
         send_email(email, job_id)
