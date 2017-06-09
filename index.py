@@ -70,32 +70,29 @@ def index():
 def submit():
     import hashlib
     import random
+    import helpers
 
     file = request.files.get('input_file')
     filename = secure_filename(file.filename)
+    job_name = request.form.get('job_name')
     temperature = request.form.get('temperature')
     pH = request.form.get('pH')
     email = request.form.get('email')
 
-    job = Job(job_name='job_name', pH=pH, temperature=temperature, email=email)
+    job = Job(job_name=job_name, pH=pH, temperature=temperature, email=email)
 
     db_session.add(job)
     db_session.commit()
 
     job_id = job.id
-    print(job_id)
-    print(os.getcwd())
     job_dir = os.path.join('jobs', str(job_id) )
     os.makedirs(job_dir)
     [ os.symlink(os.path.join('../../pulo_do_gato_bin', f), os.path.join(job_dir,f)) for f in os.listdir('pulo_do_gato_bin') ]
     file.save(os.path.join(job_dir, filename))
 
-    cwd = os.getcwd()
-    os.chdir(job_dir)
 
-    subprocess.Popen('python2 ./pulo_do_gato.py -T {} -ph {} -s MC -f {} > output.txt; touch finished'.format(temperature, pH, filename), shell=True)
-
-    os.chdir(cwd)
+    with helpers.change_workingdir(job_dir):
+        subprocess.Popen('python2 ./pulo_do_gato.py -T {} -ph {} -s MC -f {} > output.txt; touch finished'.format(temperature, pH, filename), shell=True)
 
     if email != '':
         send_email(email, job_id)
