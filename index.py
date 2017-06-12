@@ -161,10 +161,8 @@ def check_job(job_id):
         else:
             image1 = os.path.basename(glob.glob(os.path.join(job_dir,'*.jpg') )[0])
             image2 = None
-            stdout = subprocess.check_output("grep -e 'pH\s=*' {0}; grep -e 'T\s=*' {0}; grep 'Total dG Energy' {0}".format(os.path.join(job_dir,'output.txt')), shell=True, universal_newlines=True)
+            stdout = (subprocess.check_output("grep -e 'pH\s=*' {0}; grep -e 'T\s=*' {0}; grep 'Total dG Energy' {0}".format(os.path.join(job_dir,'output.txt')), shell=True, universal_newlines=True).split('\n'))
 
-        stdout = '<br/>'.join(stdout.split('\n'))
-        
         job_data = dict(
             job_id=str(job_id),
             output_file=os.path.basename(glob.glob(os.path.join(job_dir, 'Output*.dat'))[0]),
