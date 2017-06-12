@@ -79,7 +79,11 @@ def submit():
     pH = request.form.get('pH')
     email = request.form.get('email')
 
-    job = Job(job_name=job_name, pH=pH, temperature=temperature, email=email)
+    pH_range = False
+    if request.form.get('pH_range') != None:
+        pH_range = True
+
+    job = Job(job_name=job_name, pH=pH, pH_range=pH_range, temperature=temperature, email=email)
 
     db_session.add(job)
     db_session.commit()
@@ -93,7 +97,11 @@ def submit():
 
     with helpers.change_workingdir(job_dir):
         subprocess.Popen('gmx editconf -f {0} -c -resnr 1 -label A -o processed_{0}'.format(filename), shell=True)
-        subprocess.Popen('python2 ./pulo_do_gato.py -T {} -ph {} -s MC -f processed_{} > output.txt; touch finished'.format(temperature, pH, filename), shell=True)
+
+        if job.pH_range:
+            subprocess.Popen('./run_pdg-ph.sh processed_{} MC > output.txt; touch finished'.format(filename.split('.')[0]), shell=True)
+        else:
+            subprocess.Popen('python2 ./pulo_do_gato.py -T {} -ph {} -s MC -f processed_{} > output.txt; touch finished'.format(temperature, pH, filename), shell=True)
 
     if email != '':
         send_email(email, job_id)
@@ -133,19 +141,35 @@ def check_job(job_id):
     job_dir = os.path.join('jobs', str(job_id) )
     finished = False
 
-    if not os.path.isdir(job_dir):
-        abort(404)
+
+    job = Job.query.filter(Job.id==job_id).first()
+    if job == None:
+        return abort(404)
 
     job_data = None
     if os.path.isfile( os.path.join(job_dir, 'finished') ):
         finished = True
         stdout = ''
-        with open(os.path.join(job_dir,'output.txt'), encoding='utf-8') as stdout_file:
-            stdout='<br/>'.join(stdout_file.read().split('\n')),
+        # with open(os.path.join(job_dir,'output.txt'), encoding='utf-8') as stdout_file:
+        #     stdout='<br/>'.join(stdout_file.read().split('\n')),
+
+        # print(job.pH_range == False)
+        if job.pH_range:
+            image1 = os.path.basename(glob.glob(os.path.join(job_dir,'Fig_Gqq*.jpg') )[0])
+            image2 = os.path.basename(glob.glob(os.path.join(job_dir,'*pH_7.0*.jpg') )[0])
+            stdout = subprocess.check_output("grep -e 'T\s=*' {0} | tail -1; grep 'Total dG Energy' {0} | tail -1".format(os.path.join(job_dir,'output.txt')), shell=True, universal_newlines=True)
+        else:
+            image1 = os.path.basename(glob.glob(os.path.join(job_dir,'*.jpg') )[0])
+            image2 = None
+            stdout = subprocess.check_output("grep -e 'pH\s=*' {0}; grep -e 'T\s=*' {0}; grep 'Total dG Energy' {0}".format(os.path.join(job_dir,'output.txt')), shell=True, universal_newlines=True)
+
+        stdout = '<br/>'.join(stdout.split('\n'))
+        
         job_data = dict(
             job_id=str(job_id),
             output_file=os.path.basename(glob.glob(os.path.join(job_dir, 'Output*.dat'))[0]),
-            image=os.path.basename(glob.glob(os.path.join(job_dir,'*.jpg') )[0]),
+            image1=image1,
+            image2=image2,
             stdout=stdout
         )
 

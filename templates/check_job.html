@@ -30,7 +30,11 @@
                 Output file: <a href="{{ url_for('get_job_files', job_id=job_data.job_id, filename=job_data.output_file) }}" target="_blank">click here</a>
                 <br/><br/>
                 Graph:<br/>
-                <img class="graph" src="{{ url_for('get_job_files', job_id=job_data.job_id, filename=job_data.image) }}">
+                <img class="graph" src="{{ url_for('get_job_files', job_id=job_data.job_id, filename=job_data.image1) }}">
+                {% if job_data.image2 %}
+                <br/>
+                <img class="graph" src="{{ url_for('get_job_files', job_id=job_data.job_id, filename=job_data.image2) }}">
+                {% endif %}
               {% endif %}
             </div>
         </div>
