@@ -3,6 +3,5 @@ from django.http.response import HttpResponse
 
 # Create your views here.
 
-def post_list(request):
-    # return render(request, 'blog/post_list.html', {})
-    return HttpResponse('teste')
+def index(request):
+    return render(request, 'main/index.html')
