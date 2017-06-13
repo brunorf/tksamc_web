@@ -1,0 +1,49 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                Submit a new job
+            </div>
+            <div class="card-block">
+                <form action="{% url "submit" %}" id="submit_job_form" enctype="multipart/form-data" method="post">
+                  <div class="form-group form-inline">
+                    <label for="input_file">PDB file:&nbsp;</label>
+                    <input name="input_file" id="input_file" type="file" class="form-control-file">
+                    Sample PDB file &nbsp; <a target="_blank" href="{% static "sample_pdb_1ubq.pdb" %}">here</a>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="email">E-mail address (optional):</label>
+                    <input name="email" id="email" type="email" class="form-control">
+                    <label for="job_name">Job name (optional):</label>
+                    <input name="job_name" id="job_name" type="text" class="form-control">
+                  </div>
+                  <div class="form-group">
+                    <label for="chain">Chain:</label>
+                    <input name="chain" id="chain" type="text" class="form-control" value="A">
+                  </div>
+                  <div class="form-group">
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input name="pH_range" id="pH_range"  class="form-check-input" type="checkbox" value="">
+                        Use pH range (0.5 step)
+                      </label>
+                    </div>
+                    <label for="pH">pH:</label>
+                    <input name="pH" id="pH" type="number" class="form-control" step="0.1" min="0" max="14" value="7.0">
+                  </div>
+                  <div class="form-group">
+                    <label for="temperature">Temperature (K):</label>
+                    <input name="temperature" id="temperature" type="number" class="form-control" step="0.1" min="0" value="300">
+                  </div>
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
