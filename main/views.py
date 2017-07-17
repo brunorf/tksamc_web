@@ -38,7 +38,7 @@ def submit(request):
             for chunk in pdb_file.chunks():
                 destination.write(chunk)
 
-        [ os.symlink(os.path.join('../../pulo_do_gato_bin', f), os.path.join(job_dir,f)) for f in os.listdir('pulo_do_gato_bin') ]
+        [ os.symlink(os.path.join('../../../pulo_do_gato_bin', f), os.path.join(job_dir,f)) for f in os.listdir('pulo_do_gato_bin') ]
 
         with helpers.change_workingdir(job_dir):
             subprocess.Popen('gmx editconf -f {0} -c -resnr 1 -label A -o processed_{0}'.format(pdb_file.name), shell=True)
