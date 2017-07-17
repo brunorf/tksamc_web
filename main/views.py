@@ -8,8 +8,10 @@ from .models import Job
 def index(request):
     from .forms import JobForm
     form = JobForm()
-    return render(request, 'main/index.html', {'form':form})
+    return render(request, 'main/index.html', {'form':form, 'nav': 'home'})
 
+def results(request):
+    return render(request, 'main/results.html', {'nav': 'results'})
 
 def submit(request):
     import subprocess

@@ -1,7 +1,7 @@
 {% extends "main/base.html" %}
 {% load static %}
 {% load bootstrap_tags %}
-{% block precontent %}
+{% block content %}
 <!-- Main jumbotron for a primary marketing message or call to action -->
 <div class="jumbotron">
     <div class="container">
@@ -13,22 +13,22 @@
         side chain.</p>
     </div>
 </div>
-{% endblock %}
-{% block content %}
-<div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">
-                Submit a new job
-            </div>
-            <div class="card-block">
-                Sample PDB file <a target="_blank" href="{% static 'sample_pdb_1ubq.pdb' %}">here</a><br/><br/>
-                <form action="{% url 'submit' %}" id="submit_job_form" enctype="multipart/form-data" method="post">
-                  {% csrf_token %}
-                  {{ form|as_bootstrap }}
-                  <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    Submit a new job
+                </div>
+                <div class="card-block">
+                    Sample PDB file <a target="_blank" href="{% static 'sample_pdb_1ubq.pdb' %}">here</a><br/><br/>
+                    <form action="{% url 'submit' %}" id="submit_job_form" enctype="multipart/form-data" method="post">
+                      {% csrf_token %}
+                      {{ form|as_bootstrap }}
+                      <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
 
+                </div>
             </div>
         </div>
     </div>

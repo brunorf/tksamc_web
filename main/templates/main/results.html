@@ -1,0 +1,115 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% load bootstrap_tags %}
+{% block html_header %}
+<style type="text/css">
+p {
+    text-align: justify;
+}
+</style>
+{% endblock %}
+{% block content %}
+<br/><br/>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h1>Expected Results</h1>
+                </div>
+                <div class="card-block">
+                    <br/>
+                    <h2>&Delta;G<sub>qq</sub> ∆Gqq bar graphs analysis</h2>
+                    <br/>
+                    <p>
+                        The TKSA-MC method indicates the residues which contribute
+                        to destabilizing the protein native state. The algorithm
+                        calculates the protein electrostatic energy taking into
+                        account the contribution of each residue with polar charged
+                        side chain. Figure 1 presents an example of
+                        &Delta;G<sub>qq</sub> bar graph for ubiquitin protein <sup>1</sup>.
+                    </p>
+                    <center>
+                        <figure class="figure" style="display: table">
+                            <img src="{% static 'figure1.jpg' %}" class="figure-img img-fluid" width="800">
+                            <figcaption class="figure-caption" style="display: table-caption; caption-side: bottom;">
+                                Figure 1: Charge-charge interaction energy &Delta;G<sub>qq</sub>
+                                calculated by the TKSA-MC model for each ionizable residue in
+                                ubiquitin protein. The simulation parameters values were pH
+                                5.5 and temperature 300K. The ubiquitin used structure was
+                                PDB ID: 1UBQ. There was taken into account a total of 25
+                                ionizable groups been NTR and CTR the N and C terminal, respectively.
+                            </figcaption>
+                        </figure>
+                    </center>
+                    <p>
+                        The bars indicate the charge-charge energy contribution
+                        of each ionizable residue to the protein native state
+                        stability. The red bars indicate the candidate residues
+                        to be mutated to increase the protein thermostability and
+                        the selection criteria follows the methodology introduce
+                        by Ibarra-Molero et al.<sup>2</sup>.
+                        It was indicated the residue which present unfavorable
+                        energy values &Delta;G<sub>qq</sub> &ge; 0 and are exposed to
+                        solvent with SASA &ge; 50%. In ubiquitin example the
+                        highlighted residues are K06, E24 and K48 and this
+                        information is also printed in result screen page with
+                        its respective &Delta;G<sub>qq</sub> and SASA values. All the
+                        used data to plot the &Delta;G<sub>qq</sub> bar graphs figure
+                        is available for download in the output files. The total
+                        energy contribution to protein native state stability is
+                        given as a sum of the &Delta;G<sub>qq</sub> for each ionizable
+                        group <i>n</i> in the protein, named as &Delta;G<sub>elec</sub>.
+                        The &Delta;G<sub>elec</sub> for the ubiquitin protein in pH 5.5
+                        is -61.99kJ/mol.
+                    </p>
+
+
+                    <br/>
+                    <h2>&Delta;G<sub>elec</sub> and pH dependence</h2>
+                    <br/>
+                    <p>
+                        The total energy contribution &Delta;G<sub>elec</sub> is a pH
+                        dependent measure. The ionization degree of each polar
+                        residue side chain and its &Delta;G<sub>qq</sub> vary with the
+                        pH input value. Figure 2 presents an example
+                        of &Delta;G<sub>elec</sub> as a function of pH for ubiquitin protein.
+                    </p>
+                        <center>
+                            <figure class="figure" style="display: table">
+                                <img src="{% static 'figure2.jpg' %}" class="figure-img img-fluid" width="800">
+                                <figcaption class="figure-caption" style="display: table-caption; caption-side: bottom;">
+                                    Figure 2: &Delta;G<sub>elec</sub> as a function of pH
+                                    calculated from pH 2 to 12 for ubiquitin protein in a
+                                    total of 21 TKSA-MC runs at 300K of temperature input.
+                                </figcaption>
+                            </figure>
+                        </center>
+
+                    <p>
+                        The &Delta;G<sub>elec</sub> curve indicates the pH values which
+                        the electrostatic energy contribution of each residue to
+                        stabilizes the protein native state. The pH range used in
+                        Figure 2 result was from 2 to 12 in step of
+                        0.5 in a total of 21 TKSA-MC runs.  All the used data to
+                        plot the &Delta;G<sub>elec</sub> curve and the respective pH
+                        bar graphs figures are available for download in the output files.
+                    </p>
+
+                    <br/><br/>
+                    <h2>References</h2>
+                    <br/>
+                    <p>
+                        (1) Strickler, S. S.; Gribenko, A. V.; Gribenko, A. V.; Keiffer, T. R.; Tomlinson, J.;
+Reihle, T.; Loladze, V. V.; Makhatadze, G. I. Biochemistry 2006, 45, 2761–2766.
+                    </p>
+                    <p>
+                        (2) Ibarra-Molero, B.; Loladze, V. V.; Makhatadze, G. I.; Sanchez-Ruiz, J. M. Biochemistry
+1999, 38, 8138–8149.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -16,7 +16,7 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-toggleable-md navbar-inverse fixed-top bg-inverse">
+    <nav class="navbar navbar-toggleable-md navbar-inverse navbar-fixed-top bg-inverse">
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -24,11 +24,11 @@
 
         <div class="collapse navbar-collapse" id="navbarsExampleDefault">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                <li class="nav-item{% if nav == 'home' %} active{% endif %}">
+                    <a class="nav-link" href="{% url 'index' %}">Home</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Expected Results</a>
+                <li class="nav-item{% if nav == 'results' %} active{% endif %}">
+                    <a class="nav-link" href="{% url 'results' %}">Expected Results</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Theory</a>
@@ -60,10 +60,8 @@
       </div>
     </div>
 
-    <div>{% block precontent %}{% endblock %}</div>
+    {% block content %}{% endblock %}
 
-    <div class="container">{% block content %}{% endblock %}</div>
-    <!-- /container -->
     <script src="{% static "js/jquery-3.2.1.min.js" %}"></script>
     <script src="{% static "bootstrap-4.0.0-alpha.6/js/bootstrap.min.js" %}"></script>
     <script src="{% static "js/script.js" %}"></script>
