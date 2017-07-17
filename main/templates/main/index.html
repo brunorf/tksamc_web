@@ -1,6 +1,19 @@
 {% extends "main/base.html" %}
 {% load static %}
 {% load bootstrap_tags %}
+{% block precontent %}
+<!-- Main jumbotron for a primary marketing message or call to action -->
+<div class="jumbotron">
+    <div class="container">
+        <h1 class="display-3">TKSA-MC</h1>
+        <p>Tanford-Kirkwood Surface Accessibility - Monte Carlo</p>
+        <p>The TKSA-MC method indicates the residues which contribute to destabilizing
+        the protein native state. The algorithm calculates the protein electrostatic
+        energy taking into account the contribution of each residue with polar charged
+        side chain.</p>
+    </div>
+</div>
+{% endblock %}
 {% block content %}
 <div class="row">
     <div class="col-md-12">
