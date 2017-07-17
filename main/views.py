@@ -31,7 +31,7 @@ def submit(request):
 
         job = Job(name=name, ph=ph, ph_range=ph_range, temperature=temperature, email=email)
         job.save()
-        job_dir = os.path.join('jobs/', str(job.id))
+        job_dir = os.path.join('static/jobs/', str(job.id))
         os.makedirs(job_dir)
 
         with open(os.path.join(job_dir, pdb_file.name), 'wb+') as destination:
@@ -64,7 +64,7 @@ def check_job(request, job_id):
     import glob
     import subprocess
 
-    job_dir = os.path.join('jobs', str(job_id) )
+    job_dir = os.path.join('static/jobs', str(job_id) )
     finished = False
 
     job = Job.objects.filter(id=job_id).first()
