@@ -16,6 +16,7 @@ def results(request):
 def submit(request):
     import subprocess
     import os
+    import re
     from . import helpers
     from .forms import JobForm
 
@@ -34,6 +35,7 @@ def submit(request):
         job_dir = os.path.join('static/jobs/', str(job.id))
         os.makedirs(job_dir)
 
+        pdb_file.name = re.sub('[^0-9a-zA-Z.]+', '_', pdb_file.name)
         with open(os.path.join(job_dir, pdb_file.name), 'wb+') as destination:
             for chunk in pdb_file.chunks():
                 destination.write(chunk)
@@ -41,7 +43,7 @@ def submit(request):
         [ os.symlink(os.path.join('../../../pulo_do_gato_bin', f), os.path.join(job_dir,f)) for f in os.listdir('pulo_do_gato_bin') ]
 
         with helpers.change_workingdir(job_dir):
-            subprocess.Popen('gmx editconf -f {0} -c -resnr 1 -label A -o processed_{0}'.format(pdb_file.name), shell=True)
+            subprocess.Popen(['/usr/bin/gmx', 'editconf', '-f', pdb_file.name, '-c', '-resnr', '1', '-label', 'A', '-o', 'processed_{0}'.format(pdb_file.name)], shell=False)
 
             if job.name != '':
                 archive_name = job.name
@@ -49,9 +51,9 @@ def submit(request):
                 archive_name = str(job.id)
 
             if job.ph_range:
-                subprocess.Popen('./run_pdg-ph.sh processed_{} MC {} > output.txt; touch finished'.format(pdb_file.name.split('.')[0], archive_name), shell=True)
+                subprocess.Popen(['./run_pdg-ph.sh', 'processed_{}'.format(pdb_file.name.split('.')[0]), 'MC', archive_name], shell=False)
             else:
-                subprocess.Popen('./run_pdg.sh {} {} {} {}'.format(temperature, ph, pdb_file.name, archive_name), shell=True)
+                subprocess.Popen(['./run_pdg.sh', str(temperature), str(ph), 'processed_{}'.format(pdb_file.name), archive_name], shell=False)
 
             if email != '':
                 send_email(email, job_id)
