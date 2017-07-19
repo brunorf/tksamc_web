@@ -86,8 +86,8 @@ def check_job(request, job_id):
 
         # print(job.pH_range == False)
         if job.ph_range:
-            image1 = os.path.basename(glob.glob(os.path.join(job_dir,'Fig_Gqq*.jpg') )[0])
-            image2 = os.path.basename(glob.glob(os.path.join(job_dir,'*pH_7.0*.jpg') )[0])
+            image2 = os.path.basename(glob.glob(os.path.join(job_dir,'Fig_Gqq*.jpg') )[0])
+            image1 = os.path.basename(glob.glob(os.path.join(job_dir,'*pH_7.0*.jpg') )[0])
             stdout = subprocess.check_output("grep -e 'T\s=*' {0} | tail -1; grep 'Total dG Energy' {0} | tail -1".format(os.path.join(job_dir,'output.txt')), shell=True, universal_newlines=True)
         else:
             image1 = os.path.basename(glob.glob(os.path.join(job_dir,'*.jpg') )[0])
