@@ -38,7 +38,7 @@
                     Output file: <a href="{% static output_file_url %}" target="_blank">click here</a>
                     {% endwith %}
                     <br/><br/>
-                    Graph:<br/>
+                    
                     {% with 'jobs'|add:'/'|add:job_id|add:'/'|add:image1 as image1_url %}
                     <center>
                         <figure class="figure" style="display: table">
@@ -54,7 +54,7 @@
                     {% with 'jobs'|add:'/'|add:job_id|add:'/'|add:image2 as image2_url %}
                     <center>
                         <figure class="figure" style="display: table">
-                            <img src="{% static image2_url %}" class="figure-img img-fluid">
+                            <img src="{% static image2_url %}" class="figure-img img-fluid" width="800">
                             <figcaption class="figure-caption" style="display: table-caption; caption-side: bottom;">
                                 &Delta;G<sub>elec</sub> as a function of pH calculated from pH 2 to 12.
                             </figcaption>
