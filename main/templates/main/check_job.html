@@ -38,12 +38,26 @@
                     <br/><br/>
                     Graph:<br/>
                     {% with 'jobs'|add:'/'|add:job_id|add:'/'|add:image1 as image1_url %}
-                    <img class="graph" src="{% static image1_url %}">
+                    <div class="text-center">
+                        <figure class="figure" style="display: table">
+                            <img src="{% static image1_url %}" class="figure-img img-fluid">
+                            <figcaption class="figure-caption" style="display: table-caption; caption-side: bottom;">
+                                Charge-charge interaction energy &Delta;G<sub>qq</sub> calculated by the TKSA-MC model for each ionizable residue
+                            </figcaption>
+                        </figure>
+                    </div>
                     {% endwith %}
                     {% if image2 %}
                     <br/>
                     {% with 'jobs'|add:'/'|add:job_id|add:'/'|add:image2 as image2_url %}
-                    <img class="graph" src="{% static image2_url %}">
+                    <div class="text-center">
+                        <figure class="figure" style="display: table">
+                            <img src="{% static image2_url %}" class="figure-img img-fluid">
+                            <figcaption class="figure-caption" style="display: table-caption; caption-side: bottom;">
+                                &Delta;Gelec as a function of pH calculated from pH 2 to 12.
+                            </figcaption>
+                        </figure>
+                    </div>
                     {% endwith %}
                     {% endif %}
                   {% endif %}
