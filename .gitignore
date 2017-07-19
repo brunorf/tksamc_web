@@ -4,5 +4,5 @@ uploads
 __pycache__
 *.pyc
 smtpconfig.py
-static
+./static/
 pdg/settings_mail.py
