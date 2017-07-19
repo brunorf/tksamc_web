@@ -5,3 +5,4 @@ __pycache__
 *.pyc
 smtpconfig.py
 static
+pdg/settings_mail.py
