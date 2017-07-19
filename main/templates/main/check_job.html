@@ -16,7 +16,7 @@
                 </div>
                 <div class="card-block">
                   {% if not finished %}
-                  Please wait some more time, your job is still running
+                  Please wait, the job {{job_id}} is still running.
                   {% else %}
                   {% with 'jobs'|add:'/'|add:job_id|add:'/'|add:archive_name|add:'.zip' as job_archive %}
                   <a href="{% static job_archive %}">Get your job files here</a>
@@ -38,7 +38,7 @@
                     Output file: <a href="{% static output_file_url %}" target="_blank">click here</a>
                     {% endwith %}
                     <br/><br/>
-                    
+
                     {% with 'jobs'|add:'/'|add:job_id|add:'/'|add:image1 as image1_url %}
                     <center>
                         <figure class="figure" style="display: table">
