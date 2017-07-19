@@ -21,6 +21,7 @@
                   {% with 'jobs'|add:'/'|add:job_id|add:'/'|add:archive_name|add:'.zip' as job_archive %}
                   <a href="{% static job_archive %}">Get your job files here</a>
                   {% endwith %}
+                  {% if not image2 %}
                   <br/><br/>
                   <a data-toggle='collapse' href='#collapseExample' aria-expanded='false' aria-controls='collapseExample'>
                     Show script output
@@ -30,6 +31,7 @@
                     {{ stdout|safe }}
                     </div>
                   </div>
+                  {% endif %}
 
                     <br/><br/>
                     {% with 'jobs'|add:'/'|add:job_id|add:'/'|add:output_file as output_file_url %}
