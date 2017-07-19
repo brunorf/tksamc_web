@@ -1,0 +1,78 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% load bootstrap_tags %}
+{% block html_header %}
+<style type="text/css">
+p {
+    text-align: justify;
+}
+</style>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+</script>
+{% endblock %}
+{% block content %}
+<br/><br/>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h1>Theory</h1>
+                </div>
+                <div class="card-block">
+<p>In the Tanford-Kirkwood model (TK), the protein is treated by a spherical cavity with dielectric constant, \(\epsilon_{p}\) and radius \(b\), surrounded by an electrolyte solution modeled by the Debye-H&uuml;ckel theory <sup>1</sup>. Shire {\em et al} modified this model incorporating a solvent static accessibility correction for each ionizable residue (TKSA model)<sup>2</sup>. This modification was mostly introduced to takes into account the irregular protein-solvent interface. Thus, the model proposed is now referred to as the Tanford-Kirkwood model with a solvent accessibility (TKSA) <sup>2-4</sup>. The interaction energy, between two charged residues is given by</p>
+
+\begin{equation}
+ U_{ij}=e^{2}\left(\frac{A_{ij}-B_{ij}}{2b}-\frac{C_{ij}}{2a}\right)\left(1-SA_{ij}\right),
+\end{equation}
+
+<p>where \(e\) is the elementary charge; \(b\) is the radius of the protein; \(a\) is the closest possible approach distance of an ion; \(A_{ij}\), \(B_{ij}\) and \(C_{ij}\) are parameters obtained from the analytical solution of the Tanford and Kirkwood model, which are functions of the distance between ionizable residues, the dielectric constants, and the ionic strength <sup>1,5,6</sup>; and \(SA_{ij}\) is the average of the solvent accessible surface area of residues \(i\) and \(j\) <sup>2,3,7</sup>.</p>
+
+<p>Once the electrostatic energy between the titratable residues is determined, it is possible to calculate the free energy, \(\Delta G_{N}(\chi)\), for the native state protein in a given state of protonation \(\chi\):<sup>8,9</sup></p>
+
+\begin{equation}
+ \Delta G_{N}(\chi)=-RT(\ln 10)\sum_{i=1}^{n}(q_{i}+x_{i})\mathrm{p}K_\mathrm{a,ref,i}+\frac{1}{2}\sum_{i,j=1}^{n}U_{ij}(q_{i}+x_{i})(q_{j}+x_{j}),
+\end{equation}
+
+<p>where \(R\) is the ideal gas constant; \(T\) is the temperature; \(q_{i}\) is the charge of the ionizable residue \(i\) in its deprotonated state; \(x_{i}\) is 0 or 1, according on the protonation state of the residue \(i\); and \(\mathrm{p}K_\mathrm{a,ref,i}\) is the reference \(pK_{a}\).
+The probability that the protein is in its native state with a particular state of protonation, \(\rho_{N}(\chi)\), is guven by</p>
+
+\begin{equation}
+\label{rho-equation}
+\rho_{N}(\chi)=\frac{1}{Z_{N}}\exp\left[-\frac{\Delta G_{N}(\chi)}{RT}-\nu(\chi)(\ln 10)pH\right],
+\end{equation}
+
+<p>where \(\nu(\chi)\) is the number of ionizable residues that are protonated in the state of protonation \(\chi\), and \(Z_{N}\) is the partition function for the protein in its native state. In this server, it was assumed that the unfolded state does not contribute in the electrostatic interactions <sup>10</sup>. The protonation states \(\chi\) are calculated via Metropolis Monte Carlo. The mean total electrostatic energy, \(\langle W_{qq}\rangle\) is computed by the average over these protonation states, taking into account Eq.\ref{rho-equation}:</p>
+
+\begin{equation}
+\label{charge-charge-equation}
+ \langle W_{qq}\rangle=\sum_{\chi}\left[\frac{1}{2}\sum_{i,j=1}^n U_{ij}(q_{i}+x_{i})(q_{j}+x_{j})\right]\rho_{N}(\chi).
+\end{equation}
+
+<p>Ibarra-Molero and  Makhatadze have shown that the contribution of electrostatic interaction energy to free energy, \(\Delta G_{qq}\), can be described by the negative of the average total electrostatic energy of the native state, that is, \(\Delta G_{qq}\approx-\langle W_{qq}\rangle\) <sup>9</sup>.</p>
+
+                    <br/><br/>
+                    <h2>References</h2>
+                    <br/>
+<p>(1) Tanford, C.; Kirkwood, J. G. J. Am. Chem. Soc. 1957, 79, 5333–5339.</p>
+<p>(2) Shire, S.; Hanania, G.; Gurd, F. N. Biochemistry 1974, 13, 2967–2974.</p>
+<p>(3) Tanford, C.; Roxby, R. Biochemistry 1972, 11, 2192–2198.</p>
+<p>(4) Orttung, W. H. Biochemistry 1970, 9, 2394–2402.</p>
+<p>(5) Kirkwood, J. G. J. Chem. Phys. 1934, 2, 351–361.</p>
+<p>(6) Da Silva, F. L. B.; Jönsson, B.; Penfold, R. Protein Sci. 2001, 10, 1415–1425.</p>
+<p>(7) Havranek, J. J.; Harbury, P. B. Proc. Natl. Acad. Sci. USA 1999, 96, 11145–11150.</p>
+<p>(8) Bashford, D.; Karplus, M. J. Phys. Chem. 1991, 95, 9556–9561.</p>
+<p>(9) Ibarra-Molero, B.; Loladze, V. V.; Makhatadze, G. I.; Sanchez-Ruiz, J. M. Biochemistry
+1999, 38, 8138–8149.</p>
+<p>(10) Strickler, S. S.; Gribenko, A. V.; Gribenko, A. V.; Keiffer, T. R.; Tomlinson, J.;
+Reihle, T.; Loladze, V. V.; Makhatadze, G. I. Biochemistry 2006, 45, 2761–2766.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

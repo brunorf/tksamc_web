@@ -33,8 +33,8 @@
                 <li class="nav-item{% if nav == 'results' %} active{% endif %}">
                     <a class="nav-link" href="{% url 'results' %}">Expected Results</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Theory</a>
+                <li class="nav-item{% if nav == 'theory' %} active{% endif %}">
+                    <a class="nav-link" href="{% url 'theory' %}">Theory</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Citing Us</a>

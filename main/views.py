@@ -13,6 +13,9 @@ def index(request):
 def results(request):
     return render(request, 'main/results.html', {'nav': 'results'})
 
+def theory(request):
+    return render(request, 'main/theory.html', {'nav': 'theory'})
+
 def submit(request):
     import subprocess
     import os
