@@ -77,7 +77,7 @@ def check_job(request, job_id):
     if job == None:
         return HttpResponse('404')
 
-    job_data = dict()
+    job_data = dict(job_id=str(job_id))
     if os.path.isfile( os.path.join(job_dir, 'finished') ):
         finished = True
         stdout = ''
