@@ -56,7 +56,8 @@ def submit(request):
                 subprocess.Popen(['./run_pdg.sh', str(temperature), str(ph), 'processed_{}'.format(pdb_file.name), archive_name], shell=False)
 
             if email != '':
-                send_email(email, job_id)
+                job_url = request.build_absolute_uri(reverse('check_job', args=[job.id]))
+                helpers.send_email(email, job_url)
 
     return HttpResponseRedirect(reverse('check_job', args=[job.id]))
 
