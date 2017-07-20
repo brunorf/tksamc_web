@@ -8,17 +8,17 @@
 
 <url>
   <loc>http://tksamc.df.ibilce.unesp.br/</loc>
-  <changefreq>daily</changefreq>
+  <changefreq>monthly</changefreq>
   <priority>1.00</priority>
 </url>
 <url>
   <loc>http://tksamc.df.ibilce.unesp.br/results</loc>
-  <changefreq>daily</changefreq>
+  <changefreq>never</changefreq>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>http://tksamc.df.ibilce.unesp.br/theory</loc>
-  <changefreq>daily</changefreq>
+  <changefreq>never</changefreq>
   <priority>0.80</priority>
 </url>
 </urlset>
