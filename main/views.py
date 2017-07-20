@@ -5,6 +5,9 @@ from .models import Job
 
 # Create your views here.
 
+def sitemap(request):
+    return render(request, 'main/sitemap.xml')
+
 def google_search_console(request):
     return render(request, 'main/google_search_console.html')
 
