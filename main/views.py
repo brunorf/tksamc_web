@@ -5,6 +5,9 @@ from .models import Job
 
 # Create your views here.
 
+def google_search_console(request):
+    return render(request, 'main/google_search_console.html')
+
 def index(request):
     from .forms import JobForm
     form = JobForm()
