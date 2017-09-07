@@ -8,3 +8,4 @@ smtpconfig.py
 pdg/settings_mail.py
 pdg/settings.py
 db.sqlite3
+/pulo_do_gato_bin/
