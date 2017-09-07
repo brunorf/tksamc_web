@@ -6,3 +6,4 @@ __pycache__
 smtpconfig.py
 ./static/
 pdg/settings_mail.py
+pdg/settings.py
