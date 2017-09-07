@@ -1,0 +1,22 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block html_header %}
+{% if not finished %}
+<meta http-equiv="refresh" content="10">
+{% endif %}
+{% endblock %}
+{% block content %}
+<br/>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    Job error, please check your inital PDB file
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
