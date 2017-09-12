@@ -12,11 +12,15 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    Job results
+                    Job results {% if finished %}for {{job_name}} ({{job_id}}){% endif %}
                 </div>
                 <div class="card-block">
                   {% if not finished %}
-                  Please wait, the job {{job_id}} is still running.
+                    {% if job_name != '' %}
+                    Please wait, the job {{job_name}} ({{job_id}}) is still running.
+                    {% else %}
+                    Please wait, the job {{job_id}} is still running.
+                    {% endif %}
                   {% else %}
                   {% with 'jobs'|add:'/'|add:job_id|add:'/'|add:archive_name|add:'.zip' as job_archive %}
                   <a href="{% static job_archive %}">Get your job files here</a>

@@ -113,12 +113,18 @@ def check_job(request, job_id):
             archive_name = str(job.id)
         job_data = dict(
             job_id=str(job_id),
+            job_name=job.name,
             output_file=os.path.basename(glob.glob(os.path.join(job_dir, 'Output*.dat'))[0]),
             image1=image1,
             image2=image2,
             stdout=stdout,
             ph_range=job.ph_range,
             archive_name=archive_name
+        )
+    else:
+        job_data = dict(
+            job_id=str(job_id),
+            job_name=job.name
         )
 
     return render(request, 'main/check_job.html', {'finished':finished, **job_data})
