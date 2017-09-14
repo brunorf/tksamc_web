@@ -19,10 +19,15 @@ def send_email(email, job_name, job_url):
     from django.urls import reverse
     from django.core.mail import send_mail
 
-    message = """This is an automatic email regarding your request on the TKSA-MC server. When your job is done running you can see the results at """ + job_url
     title = 'Your job info on the TKSA-MC server'
+    begin_message = 'Your job '
     if job_name:
         title = title + ' ({})'.format(job_name)
+        begin_message += 'named as {} '.format(job_name)
+    message = (begin_message + "successful ran on TKSA-MC Web Server. You can view the results in the link: {} If you have any problems with the results, let us know.\n\n".format(job_url) +
+                "Please, cite us with this results are useful\n\n" +
+                "Thank you! Tanford-Kirkwood Surface Accessibility - Monte Carlo TKSA-MC: A Web Server for rational mutation via optimizing the protein charge interactions")
+    
     send_mail(
         title,
         message,
