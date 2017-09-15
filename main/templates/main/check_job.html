@@ -9,12 +9,12 @@
 <br/>
 <div class="container">
     <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    Job results {% if finished %}for {{job_name}} ({{job_id}}){% endif %}
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3>Job results {% if finished %}for {{job_name}} ({{job_id}}){% endif %}</h3>
                 </div>
-                <div class="card-block">
+                <div class="panel-body">
                   {% if not finished %}
                     {% if job_name != '' %}
                     Please wait, the job {{job_name}} ({{job_id}}) is still running.
@@ -44,26 +44,22 @@
                     <br/><br/>
 
                     {% with 'jobs'|add:'/'|add:job_id|add:'/'|add:image1 as image1_url %}
-                    <center>
-                        <figure class="figure" style="display: table">
-                            <img src="{% static image1_url %}" class="figure-img img-fluid" width="800">
-                            <figcaption class="figure-caption" style="display: table-caption; caption-side: bottom;">
-                                Charge-charge interaction energy &Delta;G<sub>qq</sub> calculated by the TKSA-MC model for each ionizable residue
-                            </figcaption>
-                        </figure>
-                    </center>
+                    <figure class="figure center-block text-justify">
+                        <img src="{% static image1_url %}" class="figure-img img-fluid img-responsive" width="800">
+                        <figcaption class="figure-caption" style="display: table-caption; caption-side: bottom;">
+                            Charge-charge interaction energy &Delta;G<sub>qq</sub> calculated by the TKSA-MC model for each ionizable residue
+                        </figcaption>
+                    </figure>
                     {% endwith %}
                     {% if image2 %}
                     <br/>
                     {% with 'jobs'|add:'/'|add:job_id|add:'/'|add:image2 as image2_url %}
-                    <center>
-                        <figure class="figure" style="display: table">
-                            <img src="{% static image2_url %}" class="figure-img img-fluid" width="800">
-                            <figcaption class="figure-caption" style="display: table-caption; caption-side: bottom;">
-                                &Delta;G<sub>elec</sub> as a function of pH calculated from pH 2 to 12.
-                            </figcaption>
-                        </figure>
-                    </center>
+                    <figure class="figure center-block text-justify">
+                        <img src="{% static image2_url %}" class="figure-img img-fluid img-responsive" width="800">
+                        <figcaption class="figure-caption" style="display: table-caption; caption-side: bottom;">
+                            &Delta;G<sub>elec</sub> as a function of pH calculated from pH 2 to 12.
+                        </figcaption>
+                    </figure>
                     {% endwith %}
                     {% endif %}
                   {% endif %}
