@@ -22,6 +22,9 @@ def results(request):
 def theory(request):
     return render(request, 'main/theory.html', {'nav': 'theory'})
 
+def contact_us(request):
+    return render(request, 'main/contact_us.html', {'nav': 'contact_us'})
+
 def submit(request):
     import subprocess
     import os
