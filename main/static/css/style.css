@@ -3,6 +3,9 @@
   max-width: 1000px;
 }
 
+nav.navbar {
+  margin-bottom: 0;
+}
 
 #header_logo {
   background: no-repeat center #000;
