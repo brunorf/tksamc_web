@@ -71,7 +71,7 @@ def submit(request):
                 job_url = request.build_absolute_uri(reverse('check_job', args=[job.id]))
                 helpers.send_email(email, job.name, job_url)
 
-    return HttpResponseRedirect(reverse('check_job', args=[job.id]))
+        return HttpResponseRedirect(reverse('check_job', args=[job.id]))
 
 
 def check_job(request, job_id):
