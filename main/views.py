@@ -72,6 +72,8 @@ def submit(request):
                 helpers.send_email(email, job.name, job_url)
 
         return HttpResponseRedirect(reverse('check_job', args=[job.id]))
+    else:
+        return render(request, 'main/index.html', {'form':form, 'nav': 'home'})
 
 
 def check_job(request, job_id):
