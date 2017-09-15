@@ -11,3 +11,12 @@ nav.navbar {
   background: no-repeat center #000;
   height: 130px;
 }
+
+figure.figure {
+  display: table;
+}
+
+figcaption.figure-caption {
+  display: table-caption;
+  caption-side: bottom;
+}

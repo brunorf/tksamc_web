@@ -1,25 +1,18 @@
 {% extends "main/base.html" %}
 {% load static %}
 {% load bootstrap_tags %}
-{% block html_header %}
-<style type="text/css">
-p {
-    text-align: justify;
-}
-</style>
-{% endblock %}
 {% block content %}
 <br/><br/>
 <div class="container">
     <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <h1>Expected Results</h1>
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3>Expected Results</h3>
                 </div>
-                <div class="card-block">
+                <div class="panel-body text-justify">
                     <br/>
-                    <h2>&Delta;G<sub>qq</sub> ∆Gqq bar graphs analysis</h2>
+                    <h3>&Delta;G<sub>qq</sub> ∆Gqq bar graphs analysis</h3>
                     <br/>
                     <p>
                         The TKSA-MC method indicates the residues which contribute
@@ -29,19 +22,17 @@ p {
                         side chain. Figure 1 presents an example of
                         &Delta;G<sub>qq</sub> bar graph for ubiquitin protein <sup>1</sup>.
                     </p>
-                    <center>
-                        <figure class="figure" style="display: table">
-                            <img src="{% static 'figure1.jpg' %}" class="figure-img img-fluid" width="800">
-                            <figcaption class="figure-caption" style="display: table-caption; caption-side: bottom;">
-                                Figure 1: Charge-charge interaction energy &Delta;G<sub>qq</sub>
-                                calculated by the TKSA-MC model for each ionizable residue in
-                                ubiquitin protein. The simulation parameters values were pH
-                                5.5 and temperature 300K. The ubiquitin used structure was
-                                PDB ID: 1UBQ. There was taken into account a total of 25
-                                ionizable groups been NTR and CTR the N and C terminal, respectively.
-                            </figcaption>
-                        </figure>
-                    </center>
+                    <figure class="figure center-block text-justify">
+                        <img src="{% static 'figure1.jpg' %}" class="figure-img img-fluid img-responsive">
+                        <figcaption class="figure-caption">
+                            Figure 1: Charge-charge interaction energy &Delta;G<sub>qq</sub>
+                            calculated by the TKSA-MC model for each ionizable residue in
+                            ubiquitin protein. The simulation parameters values were pH
+                            5.5 and temperature 300K. The ubiquitin used structure was
+                            PDB ID: 1UBQ. There was taken into account a total of 25
+                            ionizable groups been NTR and CTR the N and C terminal, respectively.
+                        </figcaption>
+                    </figure>
                     <p>
                         The bars indicate the charge-charge energy contribution
                         of each ionizable residue to the protein native state
@@ -66,7 +57,7 @@ p {
 
 
                     <br/>
-                    <h2>&Delta;G<sub>elec</sub> and pH dependence</h2>
+                    <h3>&Delta;G<sub>elec</sub> and pH dependence</h3>
                     <br/>
                     <p>
                         The total energy contribution &Delta;G<sub>elec</sub> is a pH
@@ -75,17 +66,14 @@ p {
                         pH input value. Figure 2 presents an example
                         of &Delta;G<sub>elec</sub> as a function of pH for ubiquitin protein.
                     </p>
-                        <center>
-                            <figure class="figure" style="display: table">
-                                <img src="{% static 'figure2.jpg' %}" class="figure-img img-fluid" width="800">
-                                <figcaption class="figure-caption" style="display: table-caption; caption-side: bottom;">
-                                    Figure 2: &Delta;G<sub>elec</sub> as a function of pH
-                                    calculated from pH 2 to 12 for ubiquitin protein in a
-                                    total of 21 TKSA-MC runs at 300K of temperature input.
-                                </figcaption>
-                            </figure>
-                        </center>
-
+                    <figure class="figure center-block text-justify">
+                        <img src="{% static 'figure2.jpg' %}" class="figure-img img-fluid img-responsive">
+                        <figcaption class="figure-caption">
+                            Figure 2: &Delta;G<sub>elec</sub> as a function of pH
+                            calculated from pH 2 to 12 for ubiquitin protein in a
+                            total of 21 TKSA-MC runs at 300K of temperature input.
+                        </figcaption>
+                    </figure>
                     <p>
                         The &Delta;G<sub>elec</sub> curve indicates the pH values which
                         the electrostatic energy contribution of each residue to
@@ -97,7 +85,7 @@ p {
                     </p>
 
                     <br/><br/>
-                    <h2>References</h2>
+                    <h3>References</h3>
                     <br/>
                     <p>
                         (1) Strickler, S. S.; Gribenko, A. V.; Gribenko, A. V.; Keiffer, T. R.; Tomlinson, J.;
