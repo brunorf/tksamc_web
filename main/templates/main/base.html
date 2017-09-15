@@ -17,7 +17,7 @@
 </head>
 
 <body>
-    <div style="background-color: #000; height: 130px; background-image: url('{% static 'logo.jpg' %}'); background-repeat:no-repeat;">        
+    <div id="header_logo" style="background-image: url('{% static 'logo.jpg' %}')">
     </div>
     <!-- Fixed navbar -->
     <nav class="navbar navbar-inverse navbar-static-top">
@@ -43,7 +43,7 @@
 
     {% block content %}{% endblock %}
 
-    <script src="{% static "https://code.jquery.com/jquery-3.2.1.min.js" %}"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="{% static "js/script.js" %}"></script>
