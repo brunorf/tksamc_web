@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  $('#pH_range').click(function() {
-    $('#pH').prop('disabled', $('#pH_range').is(':checked'))
+  $('#id_ph_range').click(function() {
+    $('#id_ph').prop('disabled', $('#id_ph_range').is(':checked'))
   })
 });
