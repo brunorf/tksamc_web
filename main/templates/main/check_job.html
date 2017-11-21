@@ -40,6 +40,7 @@
                     <br/><br/>
                     {% with 'jobs'|add:'/'|add:job_id|add:'/'|add:output_file as output_file_url %}
                     Output file: <a href="{% static output_file_url %}" target="_blank">click here</a>
+                    Output file summary: <a href="{% static output_file_summary_url %}" target="_blank">click here</a>
                     {% endwith %}
                     <br/><br/>
 
