@@ -26,7 +26,7 @@ def send_email(email, job_name, job_url):
         begin_message += 'named as {} '.format(job_name)
     message = (begin_message + "successful ran on TKSA-MC Web Server. You can view the results in the link: {} If you have any problems with the results, let us know.\n\n".format(job_url) +
                 "Please, cite us with this results are useful\n\n" +
-                "Thank you! Tanford-Kirkwood Surface Accessibility - Monte Carlo TKSA-MC: A Web Server for rational mutation via optimizing the protein charge interactions")
+                "Thank you! Tanford-Kirkwood Surface Accessibility - Monte Carlo TKSA-MC: A Web Server for rational mutation through the optimization of protein charge interactions")
     
     send_mail(
         title,
