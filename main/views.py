@@ -13,8 +13,12 @@ def google_search_console(request):
 
 def index(request):
     from .forms import JobForm
+    import glob
+    import os
     form = JobForm()
-    return render(request, 'main/index.html', {'form':form, 'nav': 'home'})
+    jobs_dir = 'static/jobs'
+    jobs_count = len(glob.glob(os.path.join(jobs_dir, '*')))
+    return render(request, 'main/index.html', {'form':form, 'nav': 'home', 'jobs_count': jobs_count})
 
 def results(request):
     return render(request, 'main/results.html', {'nav': 'results'})
