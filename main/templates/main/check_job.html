@@ -42,10 +42,12 @@
                     Output file: <a href="{% static output_file_url %}" target="_blank">click here</a>
                     {% endwith %}
                     <br/>
+                    {% if output_file_summary %}
                     {% with 'jobs'|add:'/'|add:job_id|add:'/'|add:output_file_summary as output_file_summary_url %}
                     Output file summary: <a href="{% static output_file_summary_url %}" target="_blank">click here</a>
                     {% endwith %}
                     <br/><br/>
+                    {% endif %}
 
                     {% with 'jobs'|add:'/'|add:job_id|add:'/'|add:image1 as image1_url %}
                     <figure class="figure center-block text-justify">

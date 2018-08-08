@@ -120,11 +120,16 @@ def check_job(request, job_id):
             archive_name = job.name
         else:
             archive_name = str(job.id)
+        try:
+            output_file_summary=os.path.basename(glob.glob(os.path.join(job_dir, 'dG_Energy_*.dat'))[0])
+        except:
+            output_file_summary=None
+
         job_data = dict(
             job_id=str(job_id),
             job_name=job.name,
             output_file=os.path.basename(glob.glob(os.path.join(job_dir, 'Output*.dat'))[0]),
-            output_file_summary=os.path.basename(glob.glob(os.path.join(job_dir, 'dG_Energy_*.dat'))[0]),
+            output_file_summary=output_file_summary,
             image1=image1,
             image2=image2,
             stdout=stdout,
