@@ -6,6 +6,7 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^results$', views.results, name='results'),
     url(r'^theory$', views.theory, name='theory'),
+    url(r'^process_input_pdb$', views.process_input_pdb, name='process_input_pdb'),
     url(r'^submit$', views.submit, name='submit'),
     url(r'^contact_us$', views.contact_us, name='contact_us'),
     url(r'^check_job/([a-f0-9]{8}-?[a-f0-9]{4}-?4[a-f0-9]{3}-?[89ab][a-f0-9]{3}-?[a-f0-9]{12}\Z)$', views.check_job, name='check_job'),

@@ -1,8 +1,4 @@
-{% extends "main/base.html" %}
-{% load static %}
-{% load bootstrap_tags %}
-{% load widget_tweaks %}
-{% block content %}
+{% extends "main/base.html" %} {% load static %} {% load bootstrap_tags %} {% load widget_tweaks %} {% block content %}
 <div class="jumbotron">
     <div class="page-header text-center">
         <h3>TKSA-MC: A Web Server for rational mutation via optimizing the protein charge interactions</h3>
@@ -11,60 +7,72 @@
 </div>
 
 <div class="container">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3>Submit a new job</h3>                
-            </div>
-            <div class="panel-body">
-                Sample PDB file <a target="_blank" href="{% static 'sample_pdb_1ubq.pdb' %}">here</a><br/><br/>
-                {{ form.non_field_errors }}                    
-                <form class="form-horizontal" role="form" action="{% url 'submit' %}" id="submit_job_form" enctype="multipart/form-data" method="post">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label" for="{{ form.pdb_file.name }}">PDB File:</label>
-                        <div class="col-sm-10{% if form.pdb_file.errors %} has-error{% endif %}">
-                            {% render_field form.pdb_file class="form-control" %}
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label" for="{{ form.name.name }}">Job Name:</label>
-                        <div class="col-sm-4">
-                            {% render_field form.name class="form-control" placeholder="Optional job name" %}
-                        </div>
-                        <label class="col-sm-2 control-label" for="{{ form.email.name }}">Email:</label>
-                        <div class="col-sm-4{% if form.email.errors %} has-error{% endif %}">
-                            {% render_field form.email class="form-control" placeholder="Optional email address" %}
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="checkbox col-sm-6 col-sm-offset-2">
-                            <label>
-                                {% render_field form.ph_range %}
-                                Use pH Range
-                            </label>
-                            <span class="help-block">(Check if you want to run on a pH range from 2 to 12, with 0.5 step)</span>
-                        </div>                            
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label" for="{{ form.ph.name }}">pH:</label>
-                        <div class="col-sm-4{% if form.ph.errors %} has-error{% endif %}">
-                            {% render_field form.ph class="form-control" %}
-                        </div>
-                        <label class="col-sm-2 control-label" for="{{ form.temperature.name }}">Temperature:</label>
-                        <div class="col-sm-4{% if form.temperature.errors %} has-error{% endif %}">
-                            {% render_field form.temperature class="form-control" %}
-                        </div>
-                    </div>
-                    <div class="form-group">
-                            <div class="col-sm-2 col-sm-offset-1">
-                                <button type="submit" class="btn btn-primary">Submit</button>
-                            </div>
-                    </div>
-                </form>
-            </div>
-            <div class="panel-footer">
-            Jobs since Jul/2017: {{ jobs_count }}
-            </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3>Submit a new job</h3>
         </div>
+        <div class="panel-body">
+            Sample PDB file
+            <a target="_blank" href="{% static 'sample_pdb_1ubq.pdb' %}">here</a>
+            <br/>
+            <br/> {{ form.non_field_errors }}
+            <form class="form-horizontal" role="form" action="{% url 'submit' %}" id="submit_job_form" enctype="multipart/form-data"
+                method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="{{ form.pdb_file.name }}">PDB File:</label>
+                    <div class="col-sm-4{% if form.pdb_file.errors %} has-error{% endif %}">
+                        {% render_field form.pdb_file class="form-control" %}
+                    </div>
+                    <label class="col-sm-2 control-label" for="{{ form.pdb_search.name }}">or RCSB PDB Search:</label>
+                    <div class="col-sm-4{% if form.pdb_search.errors %} has-error{% endif %}">
+                        {% render_field form.pdb_search class="form-control" placeholder="PDB search term" %}
+                    </div>
+                </div>
+                <div class="form-group" id="div_chains" style="display: none">
+                    <label class="col-sm-2 control-label" for="{{ form.chains.name }}">Chains:</label>
+                    <div class="col-sm-4{% if form.chains.errors %} has-error{% endif %}">
+                        {% render_field form.chains class="form-check" %}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="{{ form.name.name }}">Job Name:</label>
+                    <div class="col-sm-4">
+                        {% render_field form.name class="form-control" placeholder="Optional job name" %}
+                    </div>
+                    <label class="col-sm-2 control-label" for="{{ form.email.name }}">Email:</label>
+                    <div class="col-sm-4{% if form.email.errors %} has-error{% endif %}">
+                        {% render_field form.email class="form-control" placeholder="Optional email address" %}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox col-sm-6 col-sm-offset-2">
+                        <label>
+                            {% render_field form.ph_range %} Use pH Range
+                        </label>
+                        <span class="help-block">(Check if you want to run on a pH range from 2 to 12, with 0.5 step)</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="{{ form.ph.name }}">pH:</label>
+                    <div class="col-sm-4{% if form.ph.errors %} has-error{% endif %}">
+                        {% render_field form.ph class="form-control" %}
+                    </div>
+                    <label class="col-sm-2 control-label" for="{{ form.temperature.name }}">Temperature:</label>
+                    <div class="col-sm-4{% if form.temperature.errors %} has-error{% endif %}">
+                        {% render_field form.temperature class="form-control" %}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 col-sm-offset-1">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="panel-footer">
+            Jobs since Jul/2017: {{ jobs_count }}
+        </div>
+    </div>
 </div>
 {% endblock %}

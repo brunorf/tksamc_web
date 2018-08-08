@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from .models import Job
+from django.http import JsonResponse
 
 # Create your views here.
 
@@ -28,6 +29,22 @@ def theory(request):
 
 def contact_us(request):
     return render(request, 'main/contact_us.html', {'nav': 'contact_us'})
+
+def process_input_pdb(request):
+    import pypdb
+    import re
+
+    # pdb_file = request.FILES['pdb_file']
+    pdb_search = request.POST.get('pdb_search')
+    pdb = None
+    if (pdb_search):
+        pdb = pypdb.get_pdb_file(pdb_search)
+        chains = list(set(re.findall(r'^ATOM\s+[0-9]+\s+[A-Z]+\s+[A-Z]+\s+([AC])\s+.*', pdb, re.MULTILINE)))
+        
+    data = {
+        'chains': chains 
+    }
+    return JsonResponse(data)
 
 def submit(request):
     import subprocess
