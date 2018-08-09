@@ -1,7 +1,7 @@
 from django import forms
 
 class JobForm(forms.Form):
-    pdb_file = forms.FileField()
+    pdb_file = forms.FileField(required=False)
     name = forms.CharField(label='Job name', max_length=30, required=False, help_text='Optional')
     pdb_search = forms.CharField(label='PDB search term', max_length=30, required=False, help_text='Optional')
     chains = forms.MultipleChoiceField(label='Chains', required=False, help_text='Optional', choices=(), widget=forms.CheckboxSelectMultiple)
