@@ -20,3 +20,7 @@ figcaption.figure-caption {
   display: table-caption;
   caption-side: bottom;
 }
+
+#id_chains {
+  list-style-type: none;
+}
