@@ -16,8 +16,7 @@
             <a target="_blank" href="{% static 'sample_pdb_1ubq.pdb' %}">here</a>
             <br/>
             <br/> {{ form.non_field_errors }}
-            <form class="form-horizontal" role="form" action="{% url 'submit' %}" id="submit_job_form" enctype="multipart/form-data"
-                method="post">
+            <form class="form-horizontal" role="form" action="{% url 'submit' %}" id="submit_job_form" enctype="multipart/form-data" method="post" onsubmit="return validate();">
                 {% csrf_token %}
                 <div class="form-group">
                     <label class="col-sm-2 control-label" for="{{ form.pdb_file.name }}">PDB File:</label>
