@@ -1,22 +1,15 @@
-{% extends "main/base.html" %}
-{% load static %}
-{% block html_header %}
-{% if not finished %}
-<meta http-equiv="refresh" content="10">
-{% endif %}
-{% endblock %}
-{% block content %}
+{% extends "main/base.html" %} {% load static %} {% block html_header %} {% if not finished %}
+<meta http-equiv="refresh" content="10"> {% endif %} {% endblock %} {% block content %}
 <br/>
 <div class="container">
     <div class="row">
         <div class="col-sm-12">
             <div class="panel">
                 <div class="panel-heading">
-                    Job error, please check your inital PDB file
+                    Job Error, check PDB file. This input file must be in the standard PDB format and must not contain duplicate atoms.
                 </div>
             </div>
         </div>
     </div>
 </div>
 {% endblock %}
-
