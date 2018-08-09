@@ -102,6 +102,8 @@ def submit(request):
         [ os.symlink(os.path.join('../../../pulo_do_gato_bin', f), os.path.join(job_dir,f)) for f in os.listdir('pulo_do_gato_bin') ]
 
         with helpers.change_workingdir(job_dir):
+            subprocess.Popen(['/bin/sed', '-i', 's/AALA/ ALA/g;s/ACYS/ CYS/g;s/AASP/ ASP/g;s/AGLU/ GLU/g;s/APHE/ PHE/g;s/AGLY/ GLY/g;s/AHIS/ HIS/g;s/AILE/ ILE/g;s/ALYS/ LYS/g;s/ALEU/ LEU/g;s/AMET/ MET/g;s/AASN/ ASN/g;s/APRO/ PRO/g;s/AGLN/ GLN/g;s/AARG/ ARG/g;s/ASER/ SER/g;s/ATHR/ THR/g;s/AVAL/ VAL/g;s/ATRP/ TRP/g;s/ATYR/ TYR/g', pdb_filename], shell=False)
+            subprocess.Popen(['/bin/sed', '-i', '/BALA/d;/BCYS/d;/BASP/d;/BGLU/d;/BPHE/d;/BGLY/d;/BHIS/d;/BILE/d;/BLYS/d;/BLEU/d;/BMET/d;/BASN/d;/BPRO/d;/BGLN/d;/BARG/d;/BSER/d;/BTHR/d;/BVAL/d;/BTRP/d;/BTYR/d', pdb_filename], shell=False)
             subprocess.Popen(['/usr/bin/gmx', 'editconf', '-f', pdb_filename, '-c', '-resnr', '1', '-label', 'A', '-o', 'processed_{0}'.format(pdb_filename)], shell=False)
 
             if job.name != '':
