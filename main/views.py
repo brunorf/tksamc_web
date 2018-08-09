@@ -34,13 +34,21 @@ def process_input_pdb(request):
     import pypdb
     import re
 
-    # pdb_file = request.FILES['pdb_file']
+    pdb_file = None
+    try:
+        pdb_file = request.FILES['pdb_file']
+    except:
+        pass
     pdb_search = request.POST.get('pdb_search')
     pdb = None
+    chains = []
+    if (pdb_file):
+        pdb = pdb_file.read().decode('utf-8')
     if (pdb_search):
         pdb = pypdb.get_pdb_file(pdb_search)
+
+    if (pdb):
         chains = list(set(re.findall(r'^ATOM\s+[0-9]+\s+[A-Z]+\s+[A-Z]+\s+([AC])\s+.*', pdb, re.MULTILINE)))
-        
     data = {
         'chains': chains 
     }
