@@ -60,6 +60,7 @@ def submit(request):
     import re
     from . import helpers
     from .forms import JobForm
+    import pypdb
 
     form = JobForm(request.POST, request.FILES)
     if form.is_valid():
@@ -68,23 +69,40 @@ def submit(request):
         ph = form.cleaned_data['ph']
         ph_range = form.cleaned_data['ph_range']
         email = form.cleaned_data['email']
+        pdb_search = form.cleaned_data['pdb_search']
+        chains = form.cleaned_data['chains']
 
-        pdb_file = request.FILES['pdb_file']
 
         job = Job(name=name, ph=ph, ph_range=ph_range, temperature=temperature, email=email)
         job.save()
         job_dir = os.path.join('static/jobs/', str(job.id))
         os.makedirs(job_dir)
+        
+        if (not chains):
+            chains = ['A', 'C']
 
-        pdb_file.name = re.sub('[^0-9a-zA-Z.]+', '_', pdb_file.name)
-        with open(os.path.join(job_dir, pdb_file.name), 'wb+') as destination:
-            for chunk in pdb_file.chunks():
-                destination.write(chunk)
+        pdb_file = None
+        pdb_filename = None
+        if (pdb_search):
+            pdb = pypdb.get_pdb_file(pdb_search)
+            pdb_filename = pdb_search + '.pdb'
+            new_pdb = '\n'.join(re.findall(r'^ATOM\s+[0-9]+\s+[A-Z]+\s+[A-Z]+\s+[{0}]\s+.*'.format('|'.join(chains)), pdb, re.MULTILINE))
+            with open(os.path.join(job_dir, pdb_filename), 'w') as destination:
+                destination.write(new_pdb)
+        else:
+            pdb_file = request.FILES['pdb_file']
+
+            pdb_filename = re.sub('[^0-9a-zA-Z.]+', '_', pdb_file.name)
+            with open(os.path.join(job_dir, pdb_filename), 'w') as destination:
+                pdb = pdb_file.read().decode('utf-8')
+                new_pdb = '\n'.join(re.findall(r'^ATOM\s+[0-9]+\s+[A-Z]+\s+[A-Z]+\s+[{0}]\s+.*'.format('|'.join(chains)), pdb, re.MULTILINE))
+                destination.write(new_pdb)
+            
 
         [ os.symlink(os.path.join('../../../pulo_do_gato_bin', f), os.path.join(job_dir,f)) for f in os.listdir('pulo_do_gato_bin') ]
 
         with helpers.change_workingdir(job_dir):
-            subprocess.Popen(['/usr/bin/gmx', 'editconf', '-f', pdb_file.name, '-c', '-resnr', '1', '-label', 'A', '-o', 'processed_{0}'.format(pdb_file.name)], shell=False)
+            subprocess.Popen(['/usr/bin/gmx', 'editconf', '-f', pdb_filename, '-c', '-resnr', '1', '-label', 'A', '-o', 'processed_{0}'.format(pdb_filename)], shell=False)
 
             if job.name != '':
                 archive_name = job.name
@@ -92,9 +110,9 @@ def submit(request):
                 archive_name = str(job.id)
 
             if job.ph_range:
-                subprocess.Popen(['./run_pdg-ph.sh', 'processed_{}'.format(pdb_file.name.split('.')[0]), 'MC', archive_name], shell=False)
+                subprocess.Popen(['./run_pdg-ph.sh', 'processed_{}'.format(pdb_filename.split('.')[0]), 'MC', archive_name], shell=False)
             else:
-                subprocess.Popen(['./run_pdg.sh', str(temperature), str(ph), 'processed_{}'.format(pdb_file.name), archive_name], shell=False)
+                subprocess.Popen(['./run_pdg.sh', str(temperature), str(ph), 'processed_{}'.format(pdb_filename), archive_name], shell=False)
 
             if email != '':
                 job_url = request.build_absolute_uri(reverse('check_job', args=[job.id]))
