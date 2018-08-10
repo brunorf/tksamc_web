@@ -102,7 +102,7 @@ def submit(request):
         job = Job(name=name, ph=ph, ph_range=ph_range,
                   temperature=temperature, email=email, chain=chain)
         job.save()
-        job_dir = os.path.join('static/jobs/', str(job.id))
+        job_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../static/jobs/', str(job.id))
         os.makedirs(job_dir)
 
         if (not chain):
@@ -112,8 +112,8 @@ def submit(request):
             new_pdb = '\n'.join(re.findall(r'^ATOM\s+(?:[^\s]+\s+){3}[%s]\s+.*' % ('|'.join(chain)), pdb, re.MULTILINE))
             destination.write(new_pdb)
             
-        [os.symlink(os.path.join('../../../pulo_do_gato_bin', f),
-                    os.path.join(job_dir, f)) for f in os.listdir('pulo_do_gato_bin')]
+        [os.symlink(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../pulo_do_gato_bin', f),
+                    os.path.join(job_dir, f)) for f in os.listdir(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../pulo_do_gato_bin'))]
 
         with helpers.change_workingdir(job_dir):
             subprocess.Popen(['/bin/sed', '-i', 's/AALA/ ALA/g;s/ACYS/ CYS/g;s/AASP/ ASP/g;s/AGLU/ GLU/g;s/APHE/ PHE/g;s/AGLY/ GLY/g;s/AHIS/ HIS/g;s/AILE/ ILE/g;s/ALYS/ LYS/g;s/ALEU/ LEU/g;s/AMET/ MET/g;s/AASN/ ASN/g;s/APRO/ PRO/g;s/AGLN/ GLN/g;s/AARG/ ARG/g;s/ASER/ SER/g;s/ATHR/ THR/g;s/AVAL/ VAL/g;s/ATRP/ TRP/g;s/ATYR/ TYR/g', pdb_filename], shell=False)
@@ -148,7 +148,7 @@ def check_job(request, job_id):
     import glob
     import subprocess
 
-    job_dir = os.path.join('static/jobs', str(job_id))
+    job_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../static/jobs', str(job_id))
     finished = False
 
     job = Job.objects.filter(id=job_id).first()
