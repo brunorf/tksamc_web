@@ -20,8 +20,9 @@ def index(request):
     import glob
     import os
     form = JobForm()
-    jobs_dir = 'static/jobs'
-    jobs_count = len(glob.glob(os.path.join(jobs_dir, '*')))
+    # jobs_dir = 'static/jobs'
+    # jobs_count = len(glob.glob(os.path.join(jobs_dir, '*')))
+    jobs_count = Job.objects.count()
     return render(request, 'main/index.html', {'form': form, 'nav': 'home', 'jobs_count': jobs_count})
 
 
