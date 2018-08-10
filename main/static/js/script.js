@@ -67,11 +67,11 @@ function checkPDBChains(target) {
 }
 
 function showChains(data) {
-  $('#id_chains').empty();
+  $('#id_chain').empty();
   data.chains.forEach((chain, i) => {
-    $('#id_chains').append(
-      '<li><label for="id_chains_' + i + '"><input type="checkbox" name="chains" value="' + chain + '" class="form-check" id="id_chains_' + i + '">' + chain + '</label></li>'
+    $('#id_chain').append(
+      '<option value="' + chain + '">' + chain + '</option>'
     );
   });
-  $('#div_chains').show();
+  $('#div_chain').show();
 }
