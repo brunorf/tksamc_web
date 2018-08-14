@@ -173,6 +173,9 @@ def check_job(request, job_id):
                 stdout = subprocess.check_output("grep -e 'T\s=*' {0} | tail -1; grep 'Total dG Energy' {0} | tail -1".format(
                     os.path.join(job_dir, 'output.txt')), shell=True, universal_newlines=True)
             except:
+                if not job.erro:
+                    job.erro = True
+                    job.save()
                 return render(request, 'main/job_error.html')
         else:
             try:
@@ -182,6 +185,9 @@ def check_job(request, job_id):
                 stdout = (subprocess.check_output("grep -e 'pH\s=*' {0}; grep -e 'T\s=*' {0}; grep 'Total dG Energy' {0}".format(
                     os.path.join(job_dir, 'output.txt')), shell=True, universal_newlines=True).split('\n'))
             except:
+                if not job.erro:
+                    job.erro = True
+                    job.save()
                 return render(request, 'main/job_error.html')
 
         stdout = '<br/>'.join(stdout)

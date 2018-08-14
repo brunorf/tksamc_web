@@ -12,6 +12,7 @@ class Job(models.Model):
     temperature = models.DecimalField(max_digits=10, decimal_places=2)
     submit_date = models.DateTimeField(auto_now_add=True)
     email = models.EmailField()
+    erro = models.BooleanField(default=False)
 
     def __str__(self):
         return '<Job (%r) - %r>' % (self.id, self.name)
