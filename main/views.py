@@ -181,69 +181,66 @@ def check_job(request, job_id):
         return HttpResponse('404')
 
     job_data = dict(job_id=str(job_id))
-    if os.path.isfile(os.path.join(job_dir, 'finished')):
-        finished = True
-        stdout = ''
-        # with open(os.path.join(job_dir,'output.txt'), encoding='utf-8') as stdout_file:
-        #     stdout='<br/>'.join(stdout_file.read().split('\n')),
 
-        # print(job.pH_range == False)
-        if job.ph_range:
-            try:
-                image1 = os.path.basename(
-                    glob.glob(os.path.join(job_dir, '*pH_7.0*.jpg'))[0])
-                image2 = os.path.basename(
-                    glob.glob(os.path.join(job_dir, 'Fig_Gqq*.jpg'))[0])
-                stdout = subprocess.check_output("grep -e 'T\s=*' {0} | tail -1; grep 'Total dG Energy' {0} | tail -1".format(
-                    os.path.join(job_dir, 'output.txt')), shell=True, universal_newlines=True)
-            except:
-                if not job.erro:
-                    job.erro = True
-                    job.save()
-                return render(request, 'main/job_error.html')
-        else:
-            try:
-                image1 = os.path.basename(
-                    glob.glob(os.path.join(job_dir, '*.jpg'))[0])
-                image2 = None
-                stdout = (subprocess.check_output("grep -e 'pH\s=*' {0}; grep -e 'T\s=*' {0}; grep 'Total dG Energy' {0}".format(
-                    os.path.join(job_dir, 'output.txt')), shell=True, universal_newlines=True).split('\n'))
-            except:
-                if not job.erro:
-                    job.erro = True
-                    job.save()
-                return render(request, 'main/job_error.html')
-
-        stdout = '<br/>'.join(stdout)
-        if job.name != '':
-            archive_name = job.name
-        else:
-            archive_name = str(job.id)
-        try:
-            output_file_summary = os.path.basename(
-                glob.glob(os.path.join(job_dir, 'dG_Energy_*.dat'))[0])
-        except:
-            output_file_summary = None
-
-        job_data = dict(
-            job_id=str(job_id),
-            job_name=job.name,
-            output_file=os.path.basename(
-                glob.glob(os.path.join(job_dir, 'Output*.dat'))[0]),
-            output_file_summary=output_file_summary,
-            image1=image1,
-            image2=image2,
-            stdout=stdout,
-            ph_range=job.ph_range,
-            archive_name=archive_name
-        )
+    tksamc_versions = []
+    if job.tksamc_version == 1 or job.tksamc_version == 0:
+        tksamc_versions.append('tksamc')
+    if job.tksamc_version == 2 or job.tksamc_version == 0:
+        tksamc_versions.append('ntksamc')
+    
+    if job.name != '':
+        base_archive_name = job.name
     else:
-        job_data = dict(
-            job_id=str(job_id),
-            job_name=job.name
-        )
+        base_archive_name = str(job.id)
 
-    return render(request, 'main/check_job.html', {'finished': finished, **job_data})
+    for version in tksamc_versions:
+        job_data[version] = dict()
+        current_job_dir = os.path.join(job_dir, version)
+        if os.path.isfile(os.path.join(current_job_dir, 'finished')):
+            stdout = ''
+
+            try:
+                if job.ph_range:
+                    image1 = os.path.basename(
+                        glob.glob(os.path.join(current_job_dir, '*pH_7.0*.jpg'))[0])
+                    image2 = os.path.basename(
+                        glob.glob(os.path.join(current_job_dir, 'Fig_Gqq*.jpg'))[0])
+                    stdout = subprocess.check_output("grep -e 'T\s=*' {0} | tail -1; grep 'Total dG Energy' {0} | tail -1".format(
+                        os.path.join(current_job_dir, 'output.txt')), shell=True, universal_newlines=True)
+                else:
+                    image1 = os.path.basename(
+                        glob.glob(os.path.join(current_job_dir, '*.jpg'))[0])
+                    image2 = None
+                    stdout = (subprocess.check_output("grep -e 'pH\s=*' {0}; grep -e 'T\s=*' {0}; grep 'Total dG Energy' {0}".format(
+                        os.path.join(current_job_dir, 'output.txt')), shell=True, universal_newlines=True).split('\n'))
+            except:
+                if not job.erro:
+                    job.erro = True
+                    job.save()
+
+            stdout = '<br/>'.join(stdout)
+            
+            try:
+                output_file_summary = os.path.basename(
+                    glob.glob(os.path.join(current_job_dir, 'dG_Energy_*.dat'))[0])
+            except:
+                output_file_summary = None
+
+            job_data[version] = dict(
+                output_file=os.path.basename(
+                    glob.glob(os.path.join(current_job_dir, 'Output*.dat'))[0]),
+                output_file_summary=output_file_summary,
+                image1=image1,
+                image2=image2,
+                stdout=stdout,
+                ph_range=job.ph_range,
+                archive_name=version + '_' + base_archive_name,
+                finished=True
+            )
+        else:
+            job_data[version]['finished'] = False
+
+    return render(request, 'main/check_job.html', {**job_data})
 
 
 def get_chains(pdb):

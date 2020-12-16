@@ -16,69 +16,33 @@
                 </div>
                 <div class="panel-body">
                   <div>
-                  <ul class="nav nav-tabs" role="tablist">
-                    <li role="presentation" class="active"><a href="#tksamc" aria-controls="tksamc" role="tab" data-toggle="tab">TKSA-MC</a></li>
-                    <li role="presentation"><a href="#ntksamc" aria-controls="ntksamc" role="tab" data-toggle="tab">NTKSA-MC</a></li>
-                  </ul>
-                  <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane active" id="tksamc">TKSA-MC</div>
-                    <div role="tabpanel" class="tab-pane" id="ntksamc">NTKSA-MC</div>
-                  </div>
-                </div>
-                  {% if not finished %}
-                    {% if job_name != '' %}
-                    Please wait, the job {{job_name}} ({{job_id}}) is still running.
-                    {% else %}
-                    Please wait, the job {{job_id}} is still running.
-                    {% endif %}
-                  {% else %}
-                  {% with 'jobs'|add:'/'|add:job_id|add:'/'|add:archive_name|add:'.zip' as job_archive %}
-                  <a href="{% static job_archive %}">Get your job files here</a>
-                  {% endwith %}
-                  {% if not image2 %}
-                  <br/><br/>
-                  <a data-toggle='collapse' href='#collapseExample' aria-expanded='false' aria-controls='collapseExample'>
-                    Show script output
-                  </a>
-                  <div class='collapse' id='collapseExample'>
-                    <div class='card card-block'>
-                    {{ stdout|safe }}
+                    <ul class="nav nav-tabs" role="tablist">
+                      <li role="presentation" {% if not tksamc %} class="disabled" {% else %} class="active" {% endif %}>
+                        <a href="#tksamc" aria-controls="tksamc" {% if tksamc %} role="tab" data-toggle="tab" {% endif %}>TKSA-MC</a></li>
+                      <li role="presentation" {% if not ntksamc %} class="disabled" {% endif %}>
+                        <a href="#ntksamc" aria-controls="ntksamc" {% if ntksamc %} role="tab" data-toggle="tab" {% endif %}>NTKSA-MC</a></li>
+                    </ul>
+                    <div class="tab-content">
+                      {% if tksamc %}
+                      <div role="tabpanel" class="tab-pane active" id="tksamc">
+                        {% if not tksamc.finished %}
+                          Please wait, the job {{job_name}} ({{job_id}}) is still running.
+                        {% else %}
+                          {% include 'main/job_results_body.html' with job=tksamc version='tksamc' %}
+                        {% endif %}
+                      </div>
+                      {% endif %}
+                      {% if ntksamc %}
+                      <div role="tabpanel" class="tab-pane" id="ntksamc">
+                        {% if not ntksamc.finished %}
+                          Please wait, the job {{job_name}} ({{job_id}}) is still running.
+                        {% else %}
+                          {% include 'main/job_results_body.html' with job=ntksamc version='ntksamc' %}
+                        {% endif %}
+                      </div>
+                      {% endif %}
                     </div>
                   </div>
-                  {% endif %}
-
-                    <br/><br/>
-                    {% with 'jobs'|add:'/'|add:job_id|add:'/'|add:output_file as output_file_url %}
-                    Output file: <a href="{% static output_file_url %}" target="_blank">click here</a>
-                    {% endwith %}
-                    <br/>
-                    {% if output_file_summary %}
-                    {% with 'jobs'|add:'/'|add:job_id|add:'/'|add:output_file_summary as output_file_summary_url %}
-                    Output file summary: <a href="{% static output_file_summary_url %}" target="_blank">click here</a>
-                    {% endwith %}
-                    <br/><br/>
-                    {% endif %}
-
-                    {% with 'jobs'|add:'/'|add:job_id|add:'/'|add:image1 as image1_url %}
-                    <figure class="figure center-block text-justify">
-                        <img src="{% static image1_url %}" class="figure-img img-fluid img-responsive" width="800">
-                        <figcaption class="figure-caption" style="display: table-caption; caption-side: bottom;">
-                            Charge-charge interaction energy &Delta;G<sub>qq</sub> calculated by the TKSA-MC model for each ionizable residue
-                        </figcaption>
-                    </figure>
-                    {% endwith %}
-                    {% if image2 %}
-                    <br/>
-                    {% with 'jobs'|add:'/'|add:job_id|add:'/'|add:image2 as image2_url %}
-                    <figure class="figure center-block text-justify">
-                        <img src="{% static image2_url %}" class="figure-img img-fluid img-responsive" width="800">
-                        <figcaption class="figure-caption" style="display: table-caption; caption-side: bottom;">
-                            &Delta;G<sub>elec</sub> as a function of pH calculated from pH 2 to 12.
-                        </figcaption>
-                    </figure>
-                    {% endwith %}
-                    {% endif %}
-                  {% endif %}
                 </div>
             </div>
         </div>
