@@ -15,6 +15,16 @@
                     <h3>Job results {% if finished %}for {{job_name}} ({{job_id}}){% endif %}</h3>
                 </div>
                 <div class="panel-body">
+                  <div>
+                  <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#tksamc" aria-controls="tksamc" role="tab" data-toggle="tab">TKSA-MC</a></li>
+                    <li role="presentation"><a href="#ntksamc" aria-controls="ntksamc" role="tab" data-toggle="tab">NTKSA-MC</a></li>
+                  </ul>
+                  <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="tksamc">TKSA-MC</div>
+                    <div role="tabpanel" class="tab-pane" id="ntksamc">NTKSA-MC</div>
+                  </div>
+                </div>
                   {% if not finished %}
                     {% if job_name != '' %}
                     Please wait, the job {{job_name}} ({{job_id}}) is still running.
