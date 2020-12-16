@@ -19,6 +19,12 @@
             <form class="form-horizontal" role="form" action="{% url 'submit' %}" id="submit_job_form" enctype="multipart/form-data" method="post" onsubmit="return validate();">
                 {% csrf_token %}
                 <div class="form-group">
+                    <label class="col-sm-2 control-label" for="{{ form.tksamc_version.name }}">TKSA-MC version:</label>
+                    <div class="select col-sm-4">
+                        {% render_field form.tksamc_version %}
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="col-sm-2 control-label" for="{{ form.pdb_file.name }}">PDB File:</label>
                     <div class="col-sm-4{% if form.pdb_file.errors %} has-error{% endif %}">
                         {% render_field form.pdb_file class="form-control" %}
