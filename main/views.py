@@ -17,11 +17,8 @@ def google_search_console(request):
 
 def index(request):
     from .forms import JobForm
-    import glob
     import os
     form = JobForm()
-    # jobs_dir = 'static/jobs'
-    # jobs_count = len(glob.glob(os.path.join(jobs_dir, '*')))
     jobs_count = Job.objects.count()
     return render(request, 'main/index.html', {'form': form, 'nav': 'home', 'jobs_count': jobs_count})
 
@@ -81,10 +78,10 @@ def submit(request):
     
     def run_script(processed_pdb_path, job_dir, orig_bin_dir, archive_name):
         [os.symlink(os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', orig_bin_dir, f),
-                    os.path.join(tksamc_job_dir, f)) for f in os.listdir(os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', orig_bin_dir))]
+                    os.path.join(job_dir, f)) for f in os.listdir(os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', orig_bin_dir))]
 
         with helpers.change_workingdir(job_dir):
-            shutil.copyfile(processed_pdb_path, job_dir)
+            shutil.copy(processed_pdb_path, job_dir)
 
             if job.ph_range:
                 subprocess.Popen(['./run_pdg-ph.sh', 'processed_{}'.format(
@@ -116,7 +113,7 @@ def submit(request):
         ph_range = form.cleaned_data['ph_range']
         email = form.cleaned_data['email']
         chain = form.cleaned_data['chain']
-        tksamc_version = form.cleaned_data['tksamc_version']
+        tksamc_version = int(form.cleaned_data['tksamc_version'])
 
         job = Job(name=name, ph=ph, ph_range=ph_range,
                   temperature=temperature, email=email, chain=chain, tksamc_version=tksamc_version)
@@ -127,10 +124,10 @@ def submit(request):
         tksamc_job_dir = None
         ntksamc_job_dir = None
         if tksamc_version == 1 or tksamc_version == 0:
-            tksamc_job_dir = os.path.join(job_dir, 'TKSAMC')
+            tksamc_job_dir = os.path.join(job_dir, 'tksamc')
             os.makedirs(tksamc_job_dir)
-        elif tksamc_version == 2 or tksamc_version == 0:
-            ntksamc_job_dir = os.path.join(job_dir, 'NTKSAMC')
+        if tksamc_version == 2 or tksamc_version == 0:
+            ntksamc_job_dir = os.path.join(job_dir, 'ntksamc')
             os.makedirs(ntksamc_job_dir)
 
         if (not chain):
@@ -140,10 +137,11 @@ def submit(request):
             new_pdb = '\n'.join(re.findall(r'^ATOM\s+(?:[^\s]+\s+){3}[%s]\s+.*' % ('|'.join(chain)), pdb, re.MULTILINE))
             destination.write(new_pdb)
         
-        subprocess.Popen(['/bin/sed', '-i', 's/AALA/ ALA/g;s/ACYS/ CYS/g;s/AASP/ ASP/g;s/AGLU/ GLU/g;s/APHE/ PHE/g;s/AGLY/ GLY/g;s/AHIS/ HIS/g;s/AILE/ ILE/g;s/ALYS/ LYS/g;s/ALEU/ LEU/g;s/AMET/ MET/g;s/AASN/ ASN/g;s/APRO/ PRO/g;s/AGLN/ GLN/g;s/AARG/ ARG/g;s/ASER/ SER/g;s/ATHR/ THR/g;s/AVAL/ VAL/g;s/ATRP/ TRP/g;s/ATYR/ TYR/g', pdb_filename], shell=False)
-        subprocess.Popen(['/bin/sed', '-i', '/BALA/d;/BCYS/d;/BASP/d;/BGLU/d;/BPHE/d;/BGLY/d;/BHIS/d;/BILE/d;/BLYS/d;/BLEU/d;/BMET/d;/BASN/d;/BPRO/d;/BGLN/d;/BARG/d;/BSER/d;/BTHR/d;/BVAL/d;/BTRP/d;/BTYR/d', pdb_filename], shell=False)
-        subprocess.Popen(['/usr/bin/gmx', 'editconf', '-f', pdb_filename, '-c', '-resnr',
-                            '1', '-label', 'A', '-o', 'processed_{0}'.format(pdb_filename)], shell=False)
+        with helpers.change_workingdir(job_dir):
+            subprocess.check_output(['/bin/sed', '-i', 's/AALA/ ALA/g;s/ACYS/ CYS/g;s/AASP/ ASP/g;s/AGLU/ GLU/g;s/APHE/ PHE/g;s/AGLY/ GLY/g;s/AHIS/ HIS/g;s/AILE/ ILE/g;s/ALYS/ LYS/g;s/ALEU/ LEU/g;s/AMET/ MET/g;s/AASN/ ASN/g;s/APRO/ PRO/g;s/AGLN/ GLN/g;s/AARG/ ARG/g;s/ASER/ SER/g;s/ATHR/ THR/g;s/AVAL/ VAL/g;s/ATRP/ TRP/g;s/ATYR/ TYR/g', pdb_filename], shell=False)
+            subprocess.check_output(['/bin/sed', '-i', '/BALA/d;/BCYS/d;/BASP/d;/BGLU/d;/BPHE/d;/BGLY/d;/BHIS/d;/BILE/d;/BLYS/d;/BLEU/d;/BMET/d;/BASN/d;/BPRO/d;/BGLN/d;/BARG/d;/BSER/d;/BTHR/d;/BVAL/d;/BTRP/d;/BTYR/d', pdb_filename], shell=False)
+            subprocess.check_output(['/usr/bin/gmx', 'editconf', '-f', pdb_filename, '-c', '-resnr',
+                                '1', '-label', 'A', '-o', 'processed_{0}'.format(pdb_filename)], shell=False)
         
         if job.name != '':
             base_archive_name = job.name
