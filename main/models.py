@@ -13,7 +13,7 @@ class Job(models.Model):
     submit_date = models.DateTimeField(auto_now_add=True)
     email = models.EmailField()
     erro = models.BooleanField(default=False)
-    tksamc_version = models.IntegerField(default=1, choices=[(1, "Classic TKSA-MC"), (2, "NTKSA-MC"), (0, "Both")])
+    tksamc_version = models.IntegerField(default=1, choices=[(1, "Classic TKSA-MC"), (2, "GTKSA-MC"), (0, "Both")])
 
     def __str__(self):
         return '<Job (%r) - %r>' % (self.id, self.name)
