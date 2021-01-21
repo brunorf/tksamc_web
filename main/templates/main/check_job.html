@@ -1,7 +1,7 @@
 {% extends "main/base.html" %}
 {% load static %}
 {% block html_header %}
-{% if tksamc and not tksamc.finished or ntksamc and not ntksamc.finished %}
+{% if tksamc and not tksamc.finished or gtksamc and not gtksamc.finished %}
 <meta http-equiv="refresh" content="10">
 {% endif %}
 {% endblock %}
@@ -19,25 +19,33 @@
                     <ul class="nav nav-tabs" role="tablist">
                       <li role="presentation" {% if not tksamc %} class="disabled" {% else %} class="active" {% endif %}>
                         <a href="#tksamc" aria-controls="tksamc" {% if tksamc %} role="tab" data-toggle="tab" {% endif %}>TKSA-MC</a></li>
-                      <li role="presentation"{% if not ntksamc %} class="disabled" {% elif not tksamc %} class="active"{% endif %}>
-                        <a href="#ntksamc" aria-controls="ntksamc" {% if ntksamc %} role="tab" data-toggle="tab" {% endif %}>NTKSA-MC</a></li>
+                      <li role="presentation"{% if not gtksamc %} class="disabled" {% elif not tksamc %} class="active"{% endif %}>
+                        <a href="#gtksamc" aria-controls="gtksamc" {% if gtksamc %} role="tab" data-toggle="tab" {% endif %}>NTKSA-MC</a></li>
                     </ul>
                     <div class="tab-content">
                       {% if tksamc %}
                       <div role="tabpanel" class="tab-pane{% if tksamc %} active{% endif %}" id="tksamc">
-                        {% if not tksamc.finished %}
-                          Please wait, the job {{job_name}} ({{job_id}}) is still running.
+                        {% if tksamc.erro %}
+                          {% include 'main/job_error_message.html' %}
                         {% else %}
-                          {% include 'main/job_results_body.html' with job=tksamc version='tksamc' %}
+                          {% if not tksamc.finished %}
+                            Please wait, the job {{job_name}} ({{job_id}}) is still running.
+                          {% else %}
+                            {% include 'main/job_results_body.html' with job=tksamc version='tksamc' %}
+                          {% endif %}
                         {% endif %}
                       </div>
                       {% endif %}
-                      {% if ntksamc %}
-                      <div role="tabpanel" class="tab-pane{% if ntksamc and not tksamc %} active{% endif %}" id="ntksamc">
-                        {% if not ntksamc.finished %}
-                          Please wait, the job {{job_name}} ({{job_id}}) is still running.
+                      {% if gtksamc %}
+                      <div role="tabpanel" class="tab-pane{% if gtksamc and not tksamc %} active{% endif %}" id="gtksamc">
+                        {% if gtksamc.erro %}
+                          {% include 'main/job_error_message.html' %}
                         {% else %}
-                          {% include 'main/job_results_body.html' with job=ntksamc version='ntksamc' %}
+                          {% if not gtksamc.finished %}
+                            Please wait, the job {{job_name}} ({{job_id}}) is still running.
+                          {% else %}
+                            {% include 'main/job_results_body.html' with job=gtksamc version='gtksamc' %}
+                          {% endif %}
                         {% endif %}
                       </div>
                       {% endif %}

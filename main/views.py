@@ -76,19 +76,18 @@ def submit(request):
     available_chains = []
 
     
-    def run_script(processed_pdb_path, job_dir, orig_bin_dir, archive_name):
+    def run_script(processed_pdb_filename, job_dir, orig_bin_dir, archive_name):
         [os.symlink(os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', orig_bin_dir, f),
                     os.path.join(job_dir, f)) for f in os.listdir(os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', orig_bin_dir))]
 
         with helpers.change_workingdir(job_dir):
-            shutil.copy(processed_pdb_path, job_dir)
+            shutil.copy(os.path.join('..', processed_pdb_filename), job_dir)
 
             if job.ph_range:
-                subprocess.Popen(['./run_pdg-ph.sh', 'processed_{}'.format(
-                    pdb_filename.split('.')[0]), 'MC', archive_name], shell=False)
+                subprocess.Popen(['./run_pdg-ph.sh', processed_pdb_filename.split('.')[0], 'MC', archive_name], shell=False)
             else:
                 subprocess.Popen(['./run_pdg.sh', str(temperature), str(ph),
-                                  'processed_{}'.format(pdb_filename), archive_name], shell=False)
+                                  processed_pdb_filename, archive_name], shell=False)
 
     if (pdb_search):
         pdb = pypdb.get_pdb_file(pdb_search)
@@ -122,13 +121,13 @@ def submit(request):
         os.makedirs(job_dir)
         
         tksamc_job_dir = None
-        ntksamc_job_dir = None
+        gtksamc_job_dir = None
         if tksamc_version == 1 or tksamc_version == 0:
             tksamc_job_dir = os.path.join(job_dir, 'tksamc')
             os.makedirs(tksamc_job_dir)
         if tksamc_version == 2 or tksamc_version == 0:
-            ntksamc_job_dir = os.path.join(job_dir, 'ntksamc')
-            os.makedirs(ntksamc_job_dir)
+            gtksamc_job_dir = os.path.join(job_dir, 'gtksamc')
+            os.makedirs(gtksamc_job_dir)
 
         if (not chain):
             chain = ['^\s']
@@ -149,11 +148,11 @@ def submit(request):
             base_archive_name = str(job.id)
         
         if tksamc_job_dir:
-            run_script(os.path.join(job_dir, 'processed_{0}'.format(pdb_filename)),
+            run_script('processed_{0}'.format(pdb_filename),
             tksamc_job_dir, 'tksamc_bin', 'tksamc_' + base_archive_name)
-        if ntksamc_job_dir:
-            run_script(os.path.join(job_dir, 'processed_{0}'.format(pdb_filename)),
-            ntksamc_job_dir, 'ntksamc_bin', 'ntksamc_' + base_archive_name)
+        if gtksamc_job_dir:
+            run_script('processed_{0}'.format(pdb_filename),
+            gtksamc_job_dir, 'gtksamc_bin', 'gtksamc_' + base_archive_name)
         
 
         if email != '':
@@ -184,7 +183,7 @@ def check_job(request, job_id):
     if job.tksamc_version == 1 or job.tksamc_version == 0:
         tksamc_versions.append('tksamc')
     if job.tksamc_version == 2 or job.tksamc_version == 0:
-        tksamc_versions.append('ntksamc')
+        tksamc_versions.append('gtksamc')
     
     if job.name != '':
         base_archive_name = job.name
@@ -196,7 +195,8 @@ def check_job(request, job_id):
         current_job_dir = os.path.join(job_dir, version)
         if os.path.isfile(os.path.join(current_job_dir, 'finished')):
             stdout = ''
-
+            image1 = None
+            image2 = None
             try:
                 if job.ph_range:
                     image1 = os.path.basename(
@@ -214,27 +214,35 @@ def check_job(request, job_id):
             except:
                 if not job.erro:
                     job.erro = True
+                    job_data[version]['erro'] = True
                     job.save()
 
             stdout = '<br/>'.join(stdout)
             
+            output_file_summary = None
+            output_file = None
             try:
-                output_file_summary = os.path.basename(
-                    glob.glob(os.path.join(current_job_dir, 'dG_Energy_*.dat'))[0])
+                dg_energy_glob = glob.glob(os.path.join(current_job_dir, 'dG_Energy_*.dat'))
+                if len(dg_energy_glob) > 0: output_file_summary = os.path.basename(dg_energy_glob[0])
+
+                output_file_glob = glob.glob(os.path.join(current_job_dir, 'Output*.dat'))
+                if len(output_file_glob) > 0: output_file = os.path.basename(output_file_glob[0])
             except:
                 output_file_summary = None
 
-            job_data[version] = dict(
-                output_file=os.path.basename(
-                    glob.glob(os.path.join(current_job_dir, 'Output*.dat'))[0]),
-                output_file_summary=output_file_summary,
-                image1=image1,
-                image2=image2,
-                stdout=stdout,
-                ph_range=job.ph_range,
-                archive_name=version + '_' + base_archive_name,
-                finished=True
-            )
+            # if job.erro:
+                # job_data[version]['erro'] = True
+
+            job_data[version].update({
+                'output_file':output_file,
+                'output_file_summary':output_file_summary,
+                'image1':image1,
+                'image2':image2,
+                'stdout':stdout,
+                'ph_range':job.ph_range,
+                'archive_name':version + '_' + base_archive_name,
+                'finished':True,
+            })
         else:
             job_data[version]['finished'] = False
 
