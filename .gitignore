@@ -10,4 +10,4 @@ pdg/settings.py
 db.sqlite3
 pulo_do_gato_bin/aux/
 tksamc_bin/aux/
-ntksamc_bin/aux/
+gtksamc_bin/aux/
