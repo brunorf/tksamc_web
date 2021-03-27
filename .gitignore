@@ -11,3 +11,4 @@ db.sqlite3
 pulo_do_gato_bin/aux/
 tksamc_bin/aux/
 gtksamc_bin/aux/
+docker-compose.yaml

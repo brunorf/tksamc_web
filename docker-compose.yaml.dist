@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+    db:
+      image: postgres
+      environment:
+        - POSTGRES_DB=
+        - POSTGRES_USER=
+        - POSTGRES_PASSWORD=
+      volumes:
+        - pgdata:/var/lib/postgresql/data
+      restart: always
+      expose:
+        - 5432
+    web:
+      build: .
+      command: gunicorn pdg.wsgi:application --bind 0.0.0.0:8000 --workers=4
+      depends_on:
+        - db
+      restart: always
+      volumes:
+        - media:/code/media/
+        - static:/code/static/
+      expose:
+        - 8000
+    nginx:
+      build: nginx/
+      ports:
+        - 127.0.0.1:80:80
+      volumes:
+        - media:/var/www/media/
+        - static:/var/www/static/
+      depends_on:
+        - web
+
+volumes:
+  pgdata:
+  static:
+  media:
