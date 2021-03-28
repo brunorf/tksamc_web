@@ -1,6 +1,5 @@
-{% load static %}
-{% with 'jobs'|add:'/'|add:job_id|add:'/'|add:version|add:'/'|add:job.archive_name|add:'.zip' as job_archive %}
-  <a href="{% static job_archive %}">Get your job files here</a>
+{% with job_id|add:'/'|add:version|add:'/'|add:job.archive_name|add:'.zip' as job_archive %}
+  <a href="{{ job_files_url }}{{ job_archive }}">Get your job files here</a>
 {% endwith %}
 {% if not job.image2 %}
   <br/><br/>
@@ -15,20 +14,20 @@
 {% endif %}
 
 <br/><br/>
-{% with 'jobs'|add:'/'|add:job_id|add:'/'|add:version|add:'/'|add:job.output_file as output_file_url %}
-  Output file: <a href="{% static output_file_url %}" target="_blank">click here</a>
+{% with job_id|add:'/'|add:version|add:'/'|add:job.output_file as output_file_url %}
+  Output file: <a href="{{ job_files_url }}{{ output_file_url }}" target="_blank">click here</a>
 {% endwith %}
 <br/>
 {% if job.output_file_summary %}
-  {% with 'jobs'|add:'/'|add:job_id|add:'/'|add:version|add:'/'|add:job.output_file_summary as output_file_summary_url %}
-    Output file summary: <a href="{% static output_file_summary_url %}" target="_blank">click here</a>
+  {% with job_id|add:'/'|add:version|add:'/'|add:job.output_file_summary as output_file_summary_url %}
+    Output file summary: <a href="{{ job_files_url }}{{output_file_summary_url}}" target="_blank">click here</a>
   {% endwith %}
   <br/><br/>
 {% endif %}
 
-{% with 'jobs'|add:'/'|add:job_id|add:'/'|add:version|add:'/'|add:job.image1 as image1_url %}
+{% with job_id|add:'/'|add:version|add:'/'|add:job.image1 as image1_url %}
   <figure class="figure center-block text-justify">
-      <img src="{% static image1_url %}" class="figure-img img-fluid img-responsive" width="800">
+      <img src="{{ job_files_url }}{{ image1_url }}" class="figure-img img-fluid img-responsive" width="800">
       <figcaption class="figure-caption" style="display: table-caption; caption-side: bottom;">
           Charge-charge interaction energy &Delta;G<sub>qq</sub> calculated by the TKSA-MC model for each ionizable residue
       </figcaption>
@@ -36,9 +35,9 @@
 {% endwith %}
 {% if job.image2 %}
   <br/>
-  {% with 'jobs'|add:'/'|add:job_id|add:'/'|add:version|add:'/'|add:job.image2 as image2_url %}
+  {% with job_id|add:'/'|add:version|add:'/'|add:job.image2 as image2_url %}
     <figure class="figure center-block text-justify">
-        <img src="{% static image2_url %}" class="figure-img img-fluid img-responsive" width="800">
+        <img src="{{ job_files_url }}{{ image2_url }}" class="figure-img img-fluid img-responsive" width="800">
         <figcaption class="figure-caption" style="display: table-caption; caption-side: bottom;">
             &Delta;G<sub>elec</sub> as a function of pH calculated from pH 2 to 12.
         </figcaption>

@@ -3,7 +3,8 @@ from django.http.response import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from .models import Job
 from django.http import JsonResponse
-
+from django.conf import settings
+from urllib.parse import urljoin
 # Create your views here.
 
 
@@ -117,7 +118,7 @@ def submit(request):
         job = Job(name=name, ph=ph, ph_range=ph_range,
                   temperature=temperature, email=email, chain=chain, tksamc_version=tksamc_version)
         job.save()
-        job_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../static/jobs/', str(job.id))
+        job_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../media/jobs/', str(job.id))
         os.makedirs(job_dir)
         
         tksamc_job_dir = None
@@ -170,7 +171,7 @@ def check_job(request, job_id):
     import glob
     import subprocess
 
-    job_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../static/jobs', str(job_id))
+    job_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../media/jobs', str(job_id))
     finished = False
 
     job = Job.objects.filter(id=job_id).first()
@@ -246,7 +247,7 @@ def check_job(request, job_id):
         else:
             job_data[version]['finished'] = False
 
-    return render(request, 'main/check_job.html', {**job_data})
+    return render(request, 'main/check_job.html', {**job_data, 'job_files_url': urljoin(settings.MEDIA_URL,'jobs/')})
 
 
 def get_chains(pdb):
