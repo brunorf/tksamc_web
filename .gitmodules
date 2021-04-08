@@ -1,0 +1,6 @@
+[submodule "tksamc_bin"]
+	path = tksamc_bin
+	url = https://github.com/brunorf/tksamc.git
+[submodule "gtksamc_bin"]
+	path = gtksamc_bin
+	url = https://github.com/brunorf/gtksamc.git
