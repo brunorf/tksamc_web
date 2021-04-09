@@ -10,11 +10,12 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 # gromacs
 RUN apt-get install -y gromacs
 
-# python2 para tksamc
-RUN apt-get install -y python python-scipy python-matplotlib python-numpy
+# python3 e dependências para o tksamc e gtksamc
+RUN apt-get install -y python3 python3-pip
+RUN pip3 install matplotlib==3.4.0 numpy==1.19.5 pandas==1.2.3 sympy==1.7.1 math3d==3.4.1 scipy==1.5.4 nestle==0.2.0 mdtraj==1.9.5
 
-# python3 para o gtksamc
-RUN apt-get install -y python3 python3-scipy python3-matplotlib python3-numpy
+# dependencias para os scripts do tksamc
+RUN apt-get install -y libstdc++5 zip
 
 # preparação para rodar o django
 RUN apt-get install -y virtualenv
